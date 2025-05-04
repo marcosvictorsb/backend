@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "baseUrl": "./src",
+    "typeRoots" : ["./node_modules/@types", "./src/@types"],
+    "paths": {
+      "*": ["node_modules/*", "src/@types/*"],
+      "@config": ["src/config/*"],
+      "@domains": ["src/domains/*"],
+      "@helpers": ["src/helpers/*"],
+      "@infra": ["src/infra/*"],
+      "@interfaces": ["src/interfaces/*"],
+      "@middlewares": ["src/middlewares/*"],
+      "@protocols": ["src/protocols/*"],
+    },    
+  },
+  "include": ["src/**/*.ts", "src/@types/**/*", "*.ts"],
+  "exclude": ["node_modules", "dist"], 
+}

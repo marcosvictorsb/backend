@@ -1,0 +1,41 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: gunno
+      #MYSQL_USER: root
+      #MYSQL_PASSWORD: root
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+
+  gunno-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gunno-api
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql
+    env_file:
+      - .env  
+    networks:
+      - app-network
+
+volumes:
+  mysql_data:  
+  
+networks:
+  app-network:
+    driver: bridge

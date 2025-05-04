@@ -1,0 +1,93 @@
+{
+  "name": "gunno-api",
+  "version": "1.0.0",
+  "description": "SAAS",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "build": "tsc",
+    "start": "nodemon --watch src --ext ts --exec ts-node -r tsconfig-paths/register --files server.ts",
+    "start:prod": "npm run migration && node dist/server.js",
+    "dev": "npm run start",
+    "test": "mocha './test/**/*test.js'",
+    "test:coverage": "NODE_ENV=test nyc --reporter=lcov --reporter=text mocha './test/**/*test.js'",
+    "migration": "npx sequelize-cli db:migrate",
+    "migration:create": "npx sequelize-cli migration:generate --name",
+    "db:create": "node src/infra/database/createDataBase.ts",
+    "deploy": "npm run build && npm run migration"
+  },
+  "_moduleAliases": {
+    "@root": ".",
+    "@config": "./src/config/*",
+    "@domains": "./src/domains/*",
+    "@helpers": "./src/helpers/*",
+    "@infra": "./src/infra/*",
+    "@interfaces": "./src/interfaces/*",
+    "@middlewares": "./src/middlewares/*",
+    "@protocols": "./src/protocols/*"
+  },
+  "pre-commit": [],
+  "eslintIgnore": [
+    "*.test.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcosvictorsb/gunno-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marcosvictorsb/gunno-api/issues"
+  },
+  "homepage": "https://github.com/marcosvictorsb/gunno-api#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "chai": "^4.3.6",
+    "chai-as-promised": "^7.1.1",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "helmet": "^5.1.1",
+    "inquirer": "^12.0.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "mocha": "^10.0.0",
+    "module-alias": "^2.2.3",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.11.0",
+    "nodemailer": "^6.7.8",
+    "pre-commit": "^1.0.10",
+    "sequelize": "^6.21.3",
+    "sequelize-cli": "^6.4.1",
+    "sinon": "^14.0.0",
+    "sqlite3": "^5.0.10",
+    "ts-dotenv": "^0.9.1",
+    "uuid": "^10.0.0",
+    "winston": "^3.8.1"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/body-parser": "^1.19.5",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^4.17.21",
+    "@types/joi": "^17.2.2",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/module-alias": "^2.0.4",
+    "@types/node": "^22.10.10",
+    "@types/sequelize": "^4.28.20",
+    "@types/uuid": "^10.0.0",
+    "@types/winston": "^2.4.4",
+    "babel-plugin-istanbul": "^6.1.1",
+    "dotenv": "^16.4.5",
+    "eslint": "^8.20.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "nodemon": "^3.1.4",
+    "nyc": "^15.1.0",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.6.3"
+  }
+}
