@@ -4,6 +4,7 @@ const whitelist = (): RegExp[] => {
   const allowed: RegExp[] = [
     /^http(s)?:\/\/(.*\.)?boilerplate.com.br(\/.*)?$/g,
     /^http(s)?:\/\/(.*\.)?gunno.com.br(\/.*)?$/g,
+    /^http(s)?:\/\/85\.31\.62\.116(:[0-9]*)?(\/.*)?$/g,
   ];
 
   const dev: RegExp[] = [
