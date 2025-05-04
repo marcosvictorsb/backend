@@ -1,4 +1,4 @@
-import { FindExpensesCriteria, ICreateExpensesGateway } from '../interfaces';
+import { ExpenseOutput, FindExpensesCriteria, ICreateExpensesGateway } from '../interfaces';
 import { IPresenter, HttpResponse } from '../../../protocols';
 import { InputCreateExpenses } from '../interfaces';
 
@@ -14,7 +14,7 @@ export class CreateExpensesInteractor {
         ? await this.createRecurringExpenses(input)
         : await this.createSingleExpense(input);
 
-      if (Array.isArray(expenses) && expenses.length === 0) {
+      if (!expenses.length) {
         this.gateway.loggerInfo('Registro de despesa não criado', { requestTxt: JSON.stringify(input)});
         return this.presenter.conflict('Registros de despesa já cadastrado anteriormente');
       }
@@ -28,7 +28,7 @@ export class CreateExpensesInteractor {
     }
   }
 
-  private async createRecurringExpenses(input: InputCreateExpenses) {
+  private async createRecurringExpenses(input: InputCreateExpenses): Promise<ExpenseOutput[]> {
     const { amount, description, id_user, recurring_count, status } = input;
     const reference_month = new Date();
     const expenses = [];
@@ -71,7 +71,7 @@ export class CreateExpensesInteractor {
     return expenses;
   }
 
-  private async createSingleExpense(input: InputCreateExpenses) {
+  private async createSingleExpense(input: InputCreateExpenses): Promise<ExpenseOutput[]> {
     const { amount, description, id_user, status } = input;
 
     const criteria: FindExpensesCriteria = {
@@ -95,12 +95,12 @@ export class CreateExpensesInteractor {
     };
 
     const expense = await this.gateway.createExpenses(data);
-    return {
+    return [{
       amount: expense.amount,
       description: expense.description,
       reference_month: expense.reference_month,
       status: expense.status,
-    };
+    }];
   }
 
   private formatMonthYear(date: Date): string {

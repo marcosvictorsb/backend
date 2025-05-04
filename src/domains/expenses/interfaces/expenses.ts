@@ -21,6 +21,13 @@ export type IExpenseRepositoryDependencies = {
 }
 
 
+export type ExpenseOutput = {
+  amount: number;
+  description: string;
+  reference_month: string;
+  status: string;
+}
+
 
 export interface IExpenseRepository {
   create(data: CreateExpensesCriteria): Promise<ExpenseEntity>;

@@ -18,7 +18,7 @@ export class CreateExpensesController implements ICreateExpensesController {
       id_user: Number(request.user?.id),
       description: request.body.description,
       amount: request.body.amount * 100,
-      is_recurring: request.body.is_recurring,
+      is_recurring: request.body.is_recurring ?? false,
       recurring_count: request.body.recurring_count,
       status: request.body.status
     }
