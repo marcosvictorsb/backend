@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 module.exports = {
   apps: [
     {
@@ -13,12 +15,12 @@ module.exports = {
   ],
   deploy: {
     production: {
-      user: 'root',
-      host: '177.153.50.232',
+      user: process.env.DEPLOY_USER,
+      host: process.env.SERVER_HOST,
       ref: 'origin/main',
-      repo: 'git@github.com:marcosvictorsb/gunno-app.git',
-      path: '/var/www/backend/gunno-api',
-      'post-deploy': 'npm install && pm2 reload ecosystem.config.js --env production'
+      repo: process.env.REPO_URL,
+      path: process.env.DEPLOY_PATH,
+      'post-deploy': 'npm install && npm run build && npm run migration && pm2 startOrRestart gunno-api --update-env'
     }
   }
 };
