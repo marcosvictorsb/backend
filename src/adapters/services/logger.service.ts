@@ -13,6 +13,7 @@ export type DataLogOutput = {
 
   id_user?: number
   id_expense?: number
+  id_income?: number
 }
 
 export interface ILoggerMixin {

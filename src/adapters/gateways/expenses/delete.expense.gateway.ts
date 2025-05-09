@@ -1,4 +1,4 @@
-import { LoggerMixin } from "../../adapters/services";
+import { LoggerMixin } from "../../services";
 
 class BaseGateway { constructor(...args: any[]) {} }
 export const MixDeleteExpenseService = LoggerMixin(BaseGateway);

@@ -1,6 +1,6 @@
 import { IExpenseRepository, IUpdateExpenseGateway, UpdateExpenseGatewayParams, UpdateExpenseData } from '../interfaces/';
 import { ExpenseEntity } from '../entity/expenses.entity';
-import { MixUpdateExpenseService } from '../../../adapters/gateways/update.expense.gateway';
+import { MixUpdateExpenseService } from '../../../adapters/gateways/';
 
 export class UpdateExpenseGateway extends MixUpdateExpenseService implements IUpdateExpenseGateway {
   expenseRepository: IExpenseRepository;

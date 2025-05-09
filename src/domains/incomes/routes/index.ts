@@ -1,0 +1,19 @@
+import { Request, Response, Router } from 'express';
+import * as factories from '../factories';
+import { authMiddleware } from '../../../middlewares/auth';
+
+const router = Router();
+
+router.post("/", authMiddleware,
+  (request: Request, response: Response) => factories.createIncomesController.createIncomes(request, response));
+
+router.get("/", authMiddleware,
+  (request: Request, response: Response) => factories.getIncomesController.getIncomes(request, response));
+
+router.delete("/:id", authMiddleware,
+  (request: Request, response: Response) => factories.deleteIncomeController.deleteIncome(request, response));
+
+router.put("/:id", authMiddleware,
+  (request: Request, response: Response) => factories.updateIncomesController.updateIncome(request, response));
+
+export default router;
