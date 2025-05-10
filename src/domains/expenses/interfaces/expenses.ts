@@ -14,8 +14,8 @@ export type FindExpensesCriteria = {
   created_at?: Date;
   updated_at?: Date;
   deleted_at?: Date;
-  createdStart?: Date
-  createdEnd?: Date
+  createdStart?: string
+  createdEnd?: string
 }
 
 export type IExpenseRepositoryDependencies = {

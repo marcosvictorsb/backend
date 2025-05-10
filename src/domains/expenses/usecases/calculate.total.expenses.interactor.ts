@@ -14,12 +14,13 @@ export class CalculateTotalExpensesInteractor {
       const { id_user } = input
 
 
-      const dates = this.getStartAndEndOfYearUTCFormatted()
+      const dates = this.getStartAndEndOfCurrentMonthFormatted();
       const criteria: FindExpensesCriteria = {
         id_user,
-        createdStart: dates.startOfYear,
-        createdEnd: dates.endOfYear
+        createdStart: dates.startOfMonth,
+        createdEnd: dates.endOfMonth
       }
+
       const expenses = await this.gateway.findExpenses(criteria)
       if(!expenses) {
         this.gateway.loggerInfo('Não tem valor cadatrado, então será necessário retornar o valor 0')
@@ -41,5 +42,20 @@ export class CalculateTotalExpensesInteractor {
       startOfYear: new Date(`${year}-01-01`),
       endOfYear: new Date(`${year}-12-31`),
     };
+  }
+
+  private getStartAndEndOfCurrentMonthFormatted(): { startOfMonth: string; endOfMonth: string } {
+    const now = new Date();
+    const year = now.getUTCFullYear();
+    const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+
+    const startOfMonth = `${year}-${month}-01`;
+    const endOfMonth = `${year}-${month}-${this.getDaysInMonth(year, parseInt(month))}`;
+
+    return { startOfMonth, endOfMonth };
+  }
+
+  private getDaysInMonth(year: number, month: number): number {
+    return new Date(year, month, 0).getUTCDate();
   }
 }
