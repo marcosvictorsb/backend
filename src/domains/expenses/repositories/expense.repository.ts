@@ -38,10 +38,12 @@ export class ExpenseRepository implements IExpenseRepository {
     if (criteria.deleted_at) {
       whereConditions['deleted_at'] = criteria.deleted_at;
     }
-    whereConditions['created_at'] = {
-    ...(criteria.createdStart && { [Op.gte]: criteria.createdStart }),
-    ...(criteria.createdEnd && { [Op.lte]: criteria.createdEnd }),
-  };
+    if (criteria.createdStart || criteria.createdEnd) {
+      whereConditions['created_at'] = {
+      ...(criteria.createdStart && { [Op.gte]: criteria.createdStart }),
+      ...(criteria.createdEnd && { [Op.lte]: criteria.createdEnd }),
+      }
+    }
   
     return whereConditions;
   }

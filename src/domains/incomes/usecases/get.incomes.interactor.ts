@@ -8,14 +8,14 @@ export class GetIncomesInteractor {
 
   async execute(input: InputGetIncomes): Promise<HttpResponse> {
     try {
-      this.gateway.loggerInfo('Iniciando busca de despesas', { requestTxt: JSON.stringify(input) });
+      this.gateway.loggerInfo('Iniciando busca de receita', { requestTxt: JSON.stringify(input) });
       const { reference_month, id_user } = input;
       const criteria: FindIncomesCriteria = { reference_month, id_user };
       const incomes = await this.gateway.getIncomes(criteria);
       return this.presenter.OK(incomes);
     } catch (error) {
-      this.gateway.loggerError('Erro ao buscar incomes', { error });
-      return this.presenter.serverError('Erro ao buscar incomes');
+      this.gateway.loggerError('Erro ao buscar receita', { error });
+      return this.presenter.serverError('Erro ao buscar receita');
     }
   }
 }
