@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { exec } from 'child_process';
 import crypto from 'crypto';
 import logger from '../../config/logger';
+import path from 'path';
 
 class Deploy {
   async handleWebhook(req: Request, res: Response) {
@@ -90,41 +91,36 @@ class Deploy {
 
   private async executeDeployScript(res: Response): Promise<void> {
     try {
-      logger.info('Starting deployment process');
+      logger.info('Starting deployment process via shell script');
 
-      // Executar comandos sequencialmente com tratamento de erro individual
-      await this.executeCommand('git fetch', 'Git fetch');
-      await this.executeCommand('git reset --hard origin/main', 'Git reset');
-      await this.executeCommand('npm install', 'NPM install');
-      await this.executeCommand('npm run deploy', 'NPM deploy');
-      await this.executeCommand('npm run pm2:restart', 'PM2 restart');
+      const deployScriptPath = path.join(process.cwd(), 'deploy.sh');
 
-      logger.info('Deployment completed successfully');
-      res.status(200).send('Deploy completed successfully');
-    } catch (error: any) {
-      logger.error('Deployment failed', { error });
-      res.status(500).send(`Deploy failed: ${error.message}`);
-    }
-  }
-
-  private executeCommand(command: string, description: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      logger.info(`Executing: ${description}`);
-
-      exec(command, (error, stdout, stderr) => {
+      // Executa o script shell e captura a saída em tempo real
+      const child = exec(`bash ${deployScriptPath}`, {
+        cwd: process.cwd()
+      }, (error, stdout, stderr) => {
         if (error) {
-          logger.error(`Command failed: ${description}`, {
-            command,
-            error,
-            stderr
-          });
-          return reject(new Error(`${description} failed: ${stderr || error.message}`));
+          logger.error('Deployment failed', { error });
+          return res.status(500).send(`Deploy failed: ${error.message}`);
         }
 
-        logger.debug(`Command succeeded: ${description}`, { stdout });
-        resolve();
+        logger.info('Deployment completed successfully');
+        res.status(200).send('Deploy completed successfully');
       });
-    });
+
+      // Pipe dos logs em tempo real
+      child.stdout?.on('data', (data) => {
+        logger.info(`Deploy log: ${data.toString().trim()}`);
+      });
+
+      child.stderr?.on('data', (data) => {
+        logger.error(`Deploy error: ${data.toString().trim()}`);
+      });
+
+    } catch (error: any) {
+      logger.error('Deployment initialization failed', { error });
+      res.status(500).send(`Deploy initialization failed: ${error.message}`);
+    }
   }
 }
 
