@@ -13,12 +13,9 @@ export class CalculateTotalExpensesInteractor {
       });
       const { id_user } = input
 
-
-      const dates = this.getStartAndEndOfCurrentMonthFormatted();
       const criteria: FindExpensesCriteria = {
         id_user,
-        createdStart: dates.startOfMonth,
-        createdEnd: dates.endOfMonth
+        reference_month: this.formatMonthYear(new Date())
       }
 
       const expenses = await this.gateway.findExpenses(criteria)
@@ -36,26 +33,9 @@ export class CalculateTotalExpensesInteractor {
     }
   }
 
-  private getStartAndEndOfYearUTCFormatted(targetYear?: number): { startOfYear: Date; endOfYear: Date } {
-    const year = targetYear || new Date().getFullYear();
-    return {
-      startOfYear: new Date(`${year}-01-01`),
-      endOfYear: new Date(`${year}-12-31`),
-    };
-  }
-
-  private getStartAndEndOfCurrentMonthFormatted(): { startOfMonth: string; endOfMonth: string } {
-    const now = new Date();
-    const year = now.getUTCFullYear();
-    const month = String(now.getUTCMonth() + 1).padStart(2, '0');
-
-    const startOfMonth = `${year}-${month}-01`;
-    const endOfMonth = `${year}-${month}-${this.getDaysInMonth(year, parseInt(month))}`;
-
-    return { startOfMonth, endOfMonth };
-  }
-
-  private getDaysInMonth(year: number, month: number): number {
-    return new Date(year, month, 0).getUTCDate();
+   private formatMonthYear(date: Date): string {
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${month}/${year}`;
   }
 }
