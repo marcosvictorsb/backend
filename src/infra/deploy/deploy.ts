@@ -93,7 +93,7 @@ class Deploy {
     try {
       logger.info('Starting deployment process via shell script');
 
-      const deployScriptPath = path.join(process.cwd(), 'deploy.sh');
+      const deployScriptPath = path.join(process.cwd(), 'src/infra/deploy.sh');
 
       // Executa o script shell e captura a saída em tempo real
       const child = exec(`bash ${deployScriptPath}`, {
