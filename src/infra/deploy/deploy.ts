@@ -88,27 +88,42 @@ class Deploy {
     }
   }
 
-  private executeDeployScript(res: Response): void {
-    const commands = [
-      'git fetch',
-      'git reset --hard origin/main',
-      'npm install',
-      'npm run deploy', // Executa build + migration
-      'npm run pm2:restart'
-    ].join(' && ');
+  private async executeDeployScript(res: Response): Promise<void> {
+    try {
+      logger.info('Starting deployment process');
 
-    logger.info('Starting deployment process');
-
-    exec(commands, (error, stdout, stderr) => {
-      if (error) {
-        logger.error('Deployment failed', { error });
-        return res.status(500).send(`Deploy failed: ${error.message}`);
-      }
+      // Executar comandos sequencialmente com tratamento de erro individual
+      await this.executeCommand('git fetch', 'Git fetch');
+      await this.executeCommand('git reset --hard origin/main', 'Git reset');
+      await this.executeCommand('npm install', 'NPM install');
+      await this.executeCommand('npm run deploy', 'NPM deploy');
+      await this.executeCommand('npm run pm2:restart', 'PM2 restart');
 
       logger.info('Deployment completed successfully');
-      logger.debug('Deployment output', { stdout, stderr });
-
       res.status(200).send('Deploy completed successfully');
+    } catch (error: any) {
+      logger.error('Deployment failed', { error });
+      res.status(500).send(`Deploy failed: ${error.message}`);
+    }
+  }
+
+  private executeCommand(command: string, description: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      logger.info(`Executing: ${description}`);
+
+      exec(command, (error, stdout, stderr) => {
+        if (error) {
+          logger.error(`Command failed: ${description}`, {
+            command,
+            error,
+            stderr
+          });
+          return reject(new Error(`${description} failed: ${stderr || error.message}`));
+        }
+
+        logger.debug(`Command succeeded: ${description}`, { stdout });
+        resolve();
+      });
     });
   }
 }
