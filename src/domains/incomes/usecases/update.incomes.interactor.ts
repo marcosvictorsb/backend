@@ -1,7 +1,7 @@
-import { IUpdateIncomeGateway, UpdateIncomeData } from '../interfaces/';
+import { IUpdateIncomeGateway, UpdateIncomeData } from '../interfaces';
 import { IPresenter } from '../../../protocols/presenter';
 import { HttpResponse } from '../../../protocols/http';
-import { InputUpdateIncome } from '../interfaces/';
+import { InputUpdateIncome } from '../interfaces';
 
 export class UpdateIncomeInteractor {
   constructor(private readonly gateway: IUpdateIncomeGateway, private presenter: IPresenter) {}

@@ -16,4 +16,7 @@ router.delete("/:id", authMiddleware,
 router.put("/:id", authMiddleware,
   (request: Request, response: Response) => factories.updateIncomesController.updateIncome(request, response));
 
+router.get("/calculate", authMiddleware,
+  (request: Request, response: Response) => factories.calculateTotalIncomesController.calculateTotalIncomes(request, response));
+
 export default router;

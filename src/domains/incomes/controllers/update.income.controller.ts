@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { UpdateIncomeInteractor } from '../usecases/update.expense.interactor';
+import { UpdateIncomeInteractor } from '../usecases/update.incomes.interactor';
 import { UpdateIncomeControllerParams } from '../interfaces';
 
 interface IUpdateIncomeController {

@@ -1,6 +1,6 @@
 import { DataLogOutput } from '../../../adapters/services';
 import logger from '../../../config/logger';
-import { UpdateIncomeInteractor } from '../usecases/update.expense.interactor';
+import { UpdateIncomeInteractor } from '../usecases/update.incomes.interactor';
 import { IIncomeRepository } from './incomes';
 
 export type InputUpdateIncome = {
