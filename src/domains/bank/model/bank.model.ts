@@ -53,7 +53,7 @@ BankModel.init(
   },
   {
     sequelize: mysql,
-    tableName: 'expenses',
+    tableName: 'banks',
     timestamps: true,
     underscored: true,
     paranoid: true,

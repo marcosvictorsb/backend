@@ -4,14 +4,15 @@ import { authMiddleware } from '../../../middlewares/auth';
 
 const router = Router();
 const {
-  createBanksController
+  createBanksController,
+  getBanksController
 } = factories;
 
 router.post("/", authMiddleware,
   (request: Request, response: Response) => createBanksController.createBank(request, response));
 
-// router.get("/", authMiddleware,
-//   (request: Request, response: Response) => factories.getIncomesController.getIncomes(request, response));
+router.get("/", authMiddleware,
+  (request: Request, response: Response) => getBanksController.getBanks(request, response));
 
 // router.delete("/:id", authMiddleware,
 //   (request: Request, response: Response) => factories.deleteIncomeController.deleteIncome(request, response));
