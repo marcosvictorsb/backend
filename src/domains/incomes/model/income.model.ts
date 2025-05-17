@@ -1,6 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import mysql from '../../../infra/database/connection/mysql';
 import { UserModel } from '../../users/model/user.model';
+import BankModel from '../../../domains/bank/model/bank.model';
 
 
 class IncomeModel extends Model {
@@ -9,6 +10,7 @@ class IncomeModel extends Model {
   description!: string;
   reference_month!: string;
   id_user!: number;
+  id_bank!: number;
   status!: string;
   created_at!: Date;
   updated_at!: Date;
@@ -47,6 +49,14 @@ IncomeModel.init(
         key: 'id',
       },
     },
+     id_bank:{
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: BankModel,
+        key: 'id',
+      },
+    },
     created_at: {
       allowNull: false,
       type: DataTypes.DATEONLY,
@@ -72,5 +82,6 @@ IncomeModel.init(
 )
 
 IncomeModel.belongsTo(UserModel, { foreignKey: 'id_user', as: 'users' })
+IncomeModel.belongsTo(BankModel, { foreignKey: 'id_bank', as: 'banks' })
 
 export default IncomeModel

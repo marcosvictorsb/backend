@@ -6,12 +6,17 @@ import { UpdateIncomeGatewayParams } from '../interfaces';
 import { UpdateIncomeController } from '../controllers';
 import { Presenter } from '../../../protocols/presenter';
 import { UpdateIncomeGateway } from '../gateways';
+import { BankRepository } from '../../../domains/bank/repositories/bank.repository';
+import BankModel from '../../../domains/bank/model/bank.model';
 
 
 const incomeRepository = new IncomeRepository({ model: IncomeModel });
+const bankRepository = new BankRepository({ model: BankModel })
+
 
 const gateway: UpdateIncomeGatewayParams = {
   repository: incomeRepository,
+  bankRepository,
   logger
 }
 

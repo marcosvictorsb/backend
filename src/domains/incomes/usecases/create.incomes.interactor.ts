@@ -1,6 +1,7 @@
-import { IncomeOutput, FindIncomesCriteria, ICreateIncomesGateway } from '../interfaces';
+import { IncomeOutput, FindIncomesCriteria, ICreateIncomesGateway, IncomeStatus } from '../interfaces';
 import { IPresenter, HttpResponse } from '../../../protocols';
 import { InputCreateIncomes } from '../interfaces';
+import { FindBankCriteria, UpdateBankData } from '../../../domains/bank/interfaces';
 
 export class CreateIncomesInteractor {
   constructor(private readonly gateway: ICreateIncomesGateway, private presenter: IPresenter) {}
@@ -8,7 +9,7 @@ export class CreateIncomesInteractor {
   async execute(input: InputCreateIncomes): Promise<HttpResponse> {   
     try {
       this.gateway.loggerInfo('Criando registros de receita', { requestTxt: JSON.stringify(input)} );
-      const { is_recurring } = input;
+      const { is_recurring, id_bank, amount, status } = input;
 
       const incomes = is_recurring
         ? await this.createRecurringIncomes(input)
@@ -20,6 +21,25 @@ export class CreateIncomesInteractor {
       }
 
       this.gateway.loggerInfo('Registros de receitas criados com sucesso', { requestTxt: JSON.stringify(incomes)});
+      
+      const bankCriteria: FindBankCriteria = {
+        id: id_bank
+      }
+
+      if(status === IncomeStatus.RECEIVED) {
+        const bank = await this.gateway.findBank(bankCriteria);
+        if (!bank) {
+          this.gateway.loggerInfo('Banco não encontrado', { requestTxt: JSON.stringify(bank)});
+          return this.presenter.notFound('Banco não encontrado');
+        }
+        const updatedAmount = bank.amount + Number(amount);
+        const criteriaUpdate: UpdateBankData = {
+          amount: updatedAmount,
+          id: bank.id
+        }
+        await this.gateway.updateBank(criteriaUpdate);
+      }      
+
       return this.presenter.created({
         ...incomes[0],
       });
@@ -31,7 +51,7 @@ export class CreateIncomesInteractor {
   }
 
   private async createRecurringIncomes(input: InputCreateIncomes): Promise<IncomeOutput[]> {
-    const { amount, description, id_user, recurring_count, status } = input;
+    const { amount, description, id_user, recurring_count, status, id_bank } = input;
     const reference_month = new Date();
     const Incomes = [];
     const firstIncome = 0;
@@ -45,6 +65,7 @@ export class CreateIncomesInteractor {
         reference_month: this.formatMonthYear(month),
         amount,
         description,
+        id_bank
       };
       const IncomeExists = await this.gateway.findIncomes(criteria);
       if (IncomeExists) {
@@ -56,6 +77,7 @@ export class CreateIncomesInteractor {
         amount,
         description,
         id_user,
+        id_bank,
         is_recurring: true,
         reference_month: this.formatMonthYear(month),
         status: index === firstIncome ? status : 'aguardando pagamento',
@@ -67,6 +89,7 @@ export class CreateIncomesInteractor {
 			  description: Income.description,
 			  reference_month: Income.reference_month,
         status: Income.status,
+        id_bank: Income.id_bank
       });
     }
 
@@ -74,7 +97,7 @@ export class CreateIncomesInteractor {
   }
 
   private async createSingleIncome(input: InputCreateIncomes): Promise<IncomeOutput[]> {
-    const { amount, description, id_user, status } = input;
+    const { amount, description, id_user, status, id_bank } = input;
 
     const criteria: FindIncomesCriteria = {
       id_user,
@@ -93,15 +116,16 @@ export class CreateIncomesInteractor {
       description,
       id_user,
       reference_month: this.formatMonthYear(new Date()),
-      status
+      status,
+      id_bank
     };
 
-    const Income = await this.gateway.createIncomes(data);
+    const income = await this.gateway.createIncomes(data);
     return [{
-      amount: Income.amount,
-      description: Income.description,
-      reference_month: Income.reference_month,
-      status: Income.status,
+      amount: income.amount,
+      description: income.description,
+      reference_month: income.reference_month,
+      status: income.status,
     }];
   }
 

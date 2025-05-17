@@ -50,6 +50,7 @@ export class IncomeRepository implements IIncomeRepository {
       description: Income.description,
       reference_month: Income.reference_month,
       id_user: Income.id_user,
+      id_bank: Income.id_bank,
       status: Income.status,
       created_at: Income.created_at,
       updated_at: Income.updated_at,
@@ -57,13 +58,13 @@ export class IncomeRepository implements IIncomeRepository {
     });
   }
 
-  public async find(criteria: FindIncomesCriteria): Promise<IncomeEntity | null> {
+  public async find(criteria: FindIncomesCriteria): Promise<IncomeEntity | undefined> {
     const Income = await this.model.findOne({
       where: this.getConditions(criteria),
       raw: true,
     });
 
-    if (!Income) return null;
+    if (!Income) return undefined;
 
     return new IncomeEntity(Income);
   }
@@ -84,6 +85,7 @@ export class IncomeRepository implements IIncomeRepository {
           reference_month: Income.reference_month,
           status: Income.status,
           id_user: Income.id_user,
+          id_bank: Income.id_bank,
         }),
     );
   }

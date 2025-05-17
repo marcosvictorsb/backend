@@ -22,7 +22,7 @@ export type CalculateTotalIncomesControllerParams = {
 }
 
 export interface ICalculateTotalIncomesGateway {
-  findIncomes(criteria: FindIncomesCriteria): Promise<IncomeEntity[] | null>;
+  findIncomes(criteria: FindIncomesCriteria): Promise<IncomeEntity[] | undefined>;
   loggerInfo(message: string, data?: unknown): void;
   loggerError(message: string, data?: unknown): void;
 }

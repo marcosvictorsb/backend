@@ -23,7 +23,7 @@ export interface GetIncomesControllerParams {
 }
 
 export interface IGetIncomesGateway {
-  getIncomes(criteria: FindIncomesCriteria): Promise<IncomeEntity[] | null>;
+  getIncomes(criteria: FindIncomesCriteria): Promise<IncomeEntity[] | undefined>;
   loggerInfo(message: string, data?: DataLogOutput): void;
   loggerError(message: string, data?: DataLogOutput): void;
 }

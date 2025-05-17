@@ -10,7 +10,7 @@ export class CalculateTotalIncomesGateway extends MixCalculateTotalIncomesServic
     this.incomeRepository = params.repository;
   }
 
-  async findIncomes(criteria: FindIncomesCriteria): Promise<IncomeEntity[] | null> {
+  async findIncomes(criteria: FindIncomesCriteria): Promise<IncomeEntity[] | undefined> {
     return await this.incomeRepository.findAll(criteria);
   }
 }

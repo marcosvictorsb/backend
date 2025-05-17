@@ -10,7 +10,7 @@ export class GetIncomesGateway extends MixGetIncomesService implements IGetIncom
     this.IncomesRepository = params.repository;
   }
 
-  async getIncomes(criteria: FindIncomesCriteria): Promise<IncomeEntity[] | null> {
+  async getIncomes(criteria: FindIncomesCriteria): Promise<IncomeEntity[] | undefined> {
     return await this.IncomesRepository.findAll(criteria);
   }
 }

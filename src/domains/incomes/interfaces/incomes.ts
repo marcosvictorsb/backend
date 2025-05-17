@@ -11,6 +11,7 @@ export type FindIncomesCriteria = {
   amount?: number;
   reference_month?: string;
   id_user?: number;
+  id_bank?: number;
   created_at?: Date;
   updated_at?: Date;
   deleted_at?: Date;
@@ -28,11 +29,16 @@ export type IncomeOutput = {
   status: string;
 }
 
+export enum IncomeStatus {
+  RECEIVED = "Recebido",
+  PENDING = "Aguardando Receber"
+}
+
 
 export interface IIncomeRepository {
   create(data: CreateIncomesCriteria): Promise<IncomeEntity>;
-  find(criteria: FindIncomesCriteria): Promise<IncomeEntity | null>;
-  findAll(criteria: FindIncomesCriteria): Promise<IncomeEntity[] | null>;
+  find(criteria: FindIncomesCriteria): Promise<IncomeEntity | undefined>;
+  findAll(criteria: FindIncomesCriteria): Promise<IncomeEntity[] | undefined>;
   delete(criteria: DeleteIncomeData): Promise<boolean>;
   update(criteria: UpdateIncomeData): Promise<boolean>;
 }
