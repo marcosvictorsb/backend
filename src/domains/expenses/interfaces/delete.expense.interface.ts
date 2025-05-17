@@ -10,7 +10,7 @@ export type InputDeleteExpense = {
 };
 
 export type DeleteExpenseData = {
-  id: number
+  id: number;
   id_user: number;
 };
 

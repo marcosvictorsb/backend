@@ -9,17 +9,18 @@ import { DeleteIncomeGateway } from '../gateways';
 import BankModel from '../../../domains/bank/model/bank.model';
 import { BankRepository } from '../../../domains/bank/repositories/bank.repository';
 
-
 const incomeRepository = new IncomeRepository({ model: IncomeModel });
-const bankRepository = new BankRepository({ model: BankModel })
+const bankRepository = new BankRepository({ model: BankModel });
 
 const gateway: DeleteIncomeGatewayParams = {
   repository: incomeRepository,
   bankRepository: bankRepository,
   logger
-}
+};
 
 const incomeGateway = new DeleteIncomeGateway(gateway);
 const presenter = new Presenter();
 const interactor = new DeleteIncomeInteractor(incomeGateway, presenter);
-export const deleteIncomeController = new DeleteIncomeController({ interactor });
+export const deleteIncomeController = new DeleteIncomeController({
+  interactor
+});

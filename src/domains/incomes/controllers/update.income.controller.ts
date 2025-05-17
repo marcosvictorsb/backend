@@ -13,7 +13,10 @@ export class UpdateIncomeController implements IUpdateIncomeController {
     this.interactor = params.interactor;
   }
 
-  public async updateIncome(request: Request, response: Response): Promise<Response> {
+  public async updateIncome(
+    request: Request,
+    response: Response
+  ): Promise<Response> {
     const result = await this.interactor.execute(request.body);
     return response.status(result.status).json(result.body);
   }

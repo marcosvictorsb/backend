@@ -6,9 +6,8 @@ const enumHelperCustomer = {
     delete: 'customer deleted',
     emailOrPassword: 'email or password is invalid',
     mismatchPassword: 'password mismatch between',
-    doNotCustomerRegistered: 'doesn\'t customers registered',
-
-  },
+    doNotCustomerRegistered: "doesn't customers registered"
+  }
 };
 
 module.exports = enumHelperCustomer;

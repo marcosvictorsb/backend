@@ -4,11 +4,16 @@ import { HttpResponse } from '../../../protocols/http';
 import { InputGetExpenses } from '../interfaces/';
 
 export class GetExpensesInteractor {
-  constructor(private readonly gateway: IGetExpensesGateway, private presenter: IPresenter) {}
+  constructor(
+    private readonly gateway: IGetExpensesGateway,
+    private presenter: IPresenter
+  ) {}
 
   async execute(input: InputGetExpenses): Promise<HttpResponse> {
     try {
-      this.gateway.loggerInfo('Iniciando busca de despesas', { requestTxt: JSON.stringify(input) });
+      this.gateway.loggerInfo('Iniciando busca de despesas', {
+        requestTxt: JSON.stringify(input)
+      });
       const { reference_month, id_user } = input;
       const criteria: FindExpensesCriteria = { reference_month, id_user };
       const expenses = await this.gateway.getExpenses(criteria);

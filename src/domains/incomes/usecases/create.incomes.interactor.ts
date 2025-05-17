@@ -1,14 +1,27 @@
-import { IncomeOutput, FindIncomesCriteria, ICreateIncomesGateway, IncomeStatus } from '../interfaces';
+import {
+  IncomeOutput,
+  FindIncomesCriteria,
+  ICreateIncomesGateway,
+  IncomeStatus
+} from '../interfaces';
 import { IPresenter, HttpResponse } from '../../../protocols';
 import { InputCreateIncomes } from '../interfaces';
-import { FindBankCriteria, UpdateBankData } from '../../../domains/bank/interfaces';
+import {
+  FindBankCriteria,
+  UpdateBankData
+} from '../../../domains/bank/interfaces';
 
 export class CreateIncomesInteractor {
-  constructor(private readonly gateway: ICreateIncomesGateway, private presenter: IPresenter) {}
+  constructor(
+    private readonly gateway: ICreateIncomesGateway,
+    private presenter: IPresenter
+  ) {}
 
-  async execute(input: InputCreateIncomes): Promise<HttpResponse> {   
+  async execute(input: InputCreateIncomes): Promise<HttpResponse> {
     try {
-      this.gateway.loggerInfo('Criando registros de receita', { requestTxt: JSON.stringify(input)} );
+      this.gateway.loggerInfo('Criando registros de receita', {
+        requestTxt: JSON.stringify(input)
+      });
       const { is_recurring, id_bank, amount, status } = input;
 
       const incomes = is_recurring
@@ -16,32 +29,40 @@ export class CreateIncomesInteractor {
         : await this.createSingleIncome(input);
 
       if (!incomes.length) {
-        this.gateway.loggerInfo('Registro de receita não criado', { requestTxt: JSON.stringify(input)});
-        return this.presenter.conflict('Registros de receita já cadastrado anteriormente');
+        this.gateway.loggerInfo('Registro de receita não criado', {
+          requestTxt: JSON.stringify(input)
+        });
+        return this.presenter.conflict(
+          'Registros de receita já cadastrado anteriormente'
+        );
       }
 
-      this.gateway.loggerInfo('Registros de receitas criados com sucesso', { requestTxt: JSON.stringify(incomes)});
-      
+      this.gateway.loggerInfo('Registros de receitas criados com sucesso', {
+        requestTxt: JSON.stringify(incomes)
+      });
+
       const bankCriteria: FindBankCriteria = {
         id: id_bank
-      }
+      };
 
-      if(status === IncomeStatus.RECEIVED) {
+      if (status === IncomeStatus.RECEIVED) {
         const bank = await this.gateway.findBank(bankCriteria);
         if (!bank) {
-          this.gateway.loggerInfo('Banco não encontrado', { requestTxt: JSON.stringify(bank)});
+          this.gateway.loggerInfo('Banco não encontrado', {
+            requestTxt: JSON.stringify(bank)
+          });
           return this.presenter.notFound('Banco não encontrado');
         }
         const updatedAmount = bank.amount + Number(amount);
         const criteriaUpdate: UpdateBankData = {
           amount: updatedAmount,
           id: bank.id
-        }
+        };
         await this.gateway.updateBank(criteriaUpdate);
-      }      
+      }
 
       return this.presenter.created({
-        ...incomes[0],
+        ...incomes[0]
       });
     } catch (error) {
       console.log(error);
@@ -50,15 +71,18 @@ export class CreateIncomesInteractor {
     }
   }
 
-  private async createRecurringIncomes(input: InputCreateIncomes): Promise<IncomeOutput[]> {
-    const { amount, description, id_user, recurring_count, status, id_bank } = input;
+  private async createRecurringIncomes(
+    input: InputCreateIncomes
+  ): Promise<IncomeOutput[]> {
+    const { amount, description, id_user, recurring_count, status, id_bank } =
+      input;
     const reference_month = new Date();
     const Incomes = [];
     const firstIncome = 0;
 
     for (let index = 0; index < (recurring_count ?? 0); index++) {
       const month = new Date(reference_month);
-      month.setMonth(reference_month.getMonth() + index);       
+      month.setMonth(reference_month.getMonth() + index);
 
       const criteria: FindIncomesCriteria = {
         id_user,
@@ -69,7 +93,9 @@ export class CreateIncomesInteractor {
       };
       const IncomeExists = await this.gateway.findIncomes(criteria);
       if (IncomeExists) {
-        this.gateway.loggerInfo('Registro de receita já existe', { requestTxt: JSON.stringify(IncomeExists)});
+        this.gateway.loggerInfo('Registro de receita já existe', {
+          requestTxt: JSON.stringify(IncomeExists)
+        });
         continue;
       }
 
@@ -80,14 +106,14 @@ export class CreateIncomesInteractor {
         id_bank,
         is_recurring: true,
         reference_month: this.formatMonthYear(month),
-        status: index === firstIncome ? status : 'aguardando pagamento',
+        status: index === firstIncome ? status : 'aguardando pagamento'
       };
 
       const Income = await this.gateway.createIncomes(data);
       Incomes.push({
         amount: Income.amount,
-			  description: Income.description,
-			  reference_month: Income.reference_month,
+        description: Income.description,
+        reference_month: Income.reference_month,
         status: Income.status,
         id_bank: Income.id_bank
       });
@@ -96,18 +122,22 @@ export class CreateIncomesInteractor {
     return Incomes;
   }
 
-  private async createSingleIncome(input: InputCreateIncomes): Promise<IncomeOutput[]> {
+  private async createSingleIncome(
+    input: InputCreateIncomes
+  ): Promise<IncomeOutput[]> {
     const { amount, description, id_user, status, id_bank } = input;
 
     const criteria: FindIncomesCriteria = {
       id_user,
       reference_month: this.formatMonthYear(new Date()),
       amount,
-      description,
+      description
     };
     const IncomeExists = await this.gateway.findIncomes(criteria);
     if (IncomeExists) {
-      this.gateway.loggerInfo('Registro de receita já existe', { requestTxt: JSON.stringify(IncomeExists)});
+      this.gateway.loggerInfo('Registro de receita já existe', {
+        requestTxt: JSON.stringify(IncomeExists)
+      });
       return [];
     }
 
@@ -121,12 +151,14 @@ export class CreateIncomesInteractor {
     };
 
     const income = await this.gateway.createIncomes(data);
-    return [{
-      amount: income.amount,
-      description: income.description,
-      reference_month: income.reference_month,
-      status: income.status,
-    }];
+    return [
+      {
+        amount: income.amount,
+        description: income.description,
+        reference_month: income.reference_month,
+        status: income.status
+      }
+    ];
   }
 
   private formatMonthYear(date: Date): string {

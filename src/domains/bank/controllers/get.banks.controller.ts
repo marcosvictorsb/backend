@@ -13,10 +13,13 @@ export class GetBanksController implements IGetBanksController {
     this.interactor = params.interactor;
   }
 
-  public async getBanks(request: Request, response: Response): Promise<Response> {
+  public async getBanks(
+    request: Request,
+    response: Response
+  ): Promise<Response> {
     const input = {
-      id_user: Number(request.user?.id),
-    }
+      id_user: Number(request.user?.id)
+    };
     const result = await this.interactor.execute(input);
     return response.status(result.status).json(result.body);
   }

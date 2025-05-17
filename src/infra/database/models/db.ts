@@ -9,7 +9,7 @@ const dialect = process.env.DB_DIALECT;
 
 const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
   dialect,
-  host,
+  host
 });
 
 module.exports = sequelize;

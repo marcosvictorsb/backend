@@ -2,25 +2,21 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    await queryInterface.addColumn(
-      'incomes',
-      'id_bank',
-      {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        after: 'id_user',
-        references: {
-          model: 'banks',
-          key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
-      }
-    )
+  async up(queryInterface, Sequelize) {
+    await queryInterface.addColumn('incomes', 'id_bank', {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+      after: 'id_user',
+      references: {
+        model: 'banks',
+        key: 'id'
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'SET NULL'
+    });
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     await queryInterface.removeColumn('incomes', 'id_bank');
   }
 };

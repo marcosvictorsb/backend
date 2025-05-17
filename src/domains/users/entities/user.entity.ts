@@ -11,7 +11,7 @@ export class UserEntity {
     name: string;
     email: string;
     password: string;
-    created_at?: Date;    
+    created_at?: Date;
     updated_at?: Date;
   }) {
     this.id = params.id;
@@ -22,7 +22,10 @@ export class UserEntity {
     this.updated_at = params.updated_at;
   }
 
-  public isPasswordValid(password: string, encryption: { compare: (plain: string, hashed: string) => boolean }): boolean {
+  public isPasswordValid(
+    password: string,
+    encryption: { compare: (plain: string, hashed: string) => boolean }
+  ): boolean {
     return encryption.compare(password, this.password);
   }
 }

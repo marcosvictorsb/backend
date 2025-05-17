@@ -13,12 +13,14 @@ export class GetIncomesController implements IGetIncomesController {
     this.interactor = params.interactor;
   }
 
-  public async getIncomes(request: Request, response: Response): Promise<Response> {
-
+  public async getIncomes(
+    request: Request,
+    response: Response
+  ): Promise<Response> {
     const input: InputGetIncomes = {
       reference_month: request.query.reference_month as string,
-      id_user: Number(request.user?.id),
-    }    
+      id_user: Number(request.user?.id)
+    };
     const result = await this.interactor.execute(input);
     return response.status(result.status).json(result.body);
   }

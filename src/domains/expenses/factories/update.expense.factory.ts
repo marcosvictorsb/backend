@@ -7,15 +7,16 @@ import { UpdateExpenseController } from '../controllers';
 import { Presenter } from '../../../protocols/presenter';
 import { UpdateExpenseGateway } from '../gateways/';
 
-
 const expenseRepository = new ExpenseRepository({ model: ExpenseModel });
 
 const gateway: UpdateExpenseGatewayParams = {
   repository: expenseRepository,
   logger
-}
+};
 
 const expenseGateway = new UpdateExpenseGateway(gateway);
 const presenter = new Presenter();
 const interactor = new UpdateExpenseInteractor(expenseGateway, presenter);
-export const updateExpensesController = new UpdateExpenseController({ interactor });
+export const updateExpensesController = new UpdateExpenseController({
+  interactor
+});

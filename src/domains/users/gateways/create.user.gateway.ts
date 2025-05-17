@@ -1,9 +1,16 @@
-import { IUserRepository, ICreateUserGateway, CreateUserGatewayParams, CreateUserData } from '../interfaces/';
+import {
+  IUserRepository,
+  ICreateUserGateway,
+  CreateUserGatewayParams,
+  CreateUserData
+} from '../interfaces/';
 import { UserEntity } from '../entities/user.entity';
 import { MixCreateUserService } from '../../../adapters/gateways';
 
-
-export class CreateUserGateway extends MixCreateUserService implements ICreateUserGateway {
+export class CreateUserGateway
+  extends MixCreateUserService
+  implements ICreateUserGateway
+{
   userRepository: IUserRepository;
 
   constructor(params: CreateUserGatewayParams) {
@@ -16,6 +23,6 @@ export class CreateUserGateway extends MixCreateUserService implements ICreateUs
   }
 
   async findUserByEmail(email: string): Promise<UserEntity | null> {
-    return this.userRepository.find({ email});
-  };
+    return this.userRepository.find({ email });
+  }
 }

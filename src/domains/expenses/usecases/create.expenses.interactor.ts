@@ -1,13 +1,22 @@
-import { ExpenseOutput, FindExpensesCriteria, ICreateExpensesGateway } from '../interfaces';
+import {
+  ExpenseOutput,
+  FindExpensesCriteria,
+  ICreateExpensesGateway
+} from '../interfaces';
 import { IPresenter, HttpResponse } from '../../../protocols';
 import { InputCreateExpenses } from '../interfaces';
 
 export class CreateExpensesInteractor {
-  constructor(private readonly gateway: ICreateExpensesGateway, private presenter: IPresenter) {}
+  constructor(
+    private readonly gateway: ICreateExpensesGateway,
+    private presenter: IPresenter
+  ) {}
 
-  async execute(input: InputCreateExpenses): Promise<HttpResponse> {   
+  async execute(input: InputCreateExpenses): Promise<HttpResponse> {
     try {
-      this.gateway.loggerInfo('Criando registros de despesas', { requestTxt: JSON.stringify(input)} );
+      this.gateway.loggerInfo('Criando registros de despesas', {
+        requestTxt: JSON.stringify(input)
+      });
       const { is_recurring } = input;
 
       const expenses = is_recurring
@@ -15,11 +24,17 @@ export class CreateExpensesInteractor {
         : await this.createSingleExpense(input);
 
       if (!expenses.length) {
-        this.gateway.loggerInfo('Registro de despesa não criado', { requestTxt: JSON.stringify(input)});
-        return this.presenter.conflict('Registros de despesa já cadastrado anteriormente');
+        this.gateway.loggerInfo('Registro de despesa não criado', {
+          requestTxt: JSON.stringify(input)
+        });
+        return this.presenter.conflict(
+          'Registros de despesa já cadastrado anteriormente'
+        );
       }
 
-      this.gateway.loggerInfo('Registros de despesas criados com sucesso', { requestTxt: JSON.stringify(expenses)});
+      this.gateway.loggerInfo('Registros de despesas criados com sucesso', {
+        requestTxt: JSON.stringify(expenses)
+      });
       return this.presenter.created(expenses);
     } catch (error) {
       console.log(error);
@@ -28,7 +43,9 @@ export class CreateExpensesInteractor {
     }
   }
 
-  private async createRecurringExpenses(input: InputCreateExpenses): Promise<ExpenseOutput[]> {
+  private async createRecurringExpenses(
+    input: InputCreateExpenses
+  ): Promise<ExpenseOutput[]> {
     const { amount, description, id_user, recurring_count, status } = input;
     const reference_month = new Date();
     const expenses = [];
@@ -36,17 +53,19 @@ export class CreateExpensesInteractor {
 
     for (let index = 0; index < (recurring_count ?? 0); index++) {
       const month = new Date(reference_month);
-      month.setMonth(reference_month.getMonth() + index);       
+      month.setMonth(reference_month.getMonth() + index);
 
       const criteria: FindExpensesCriteria = {
         id_user,
         reference_month: this.formatMonthYear(month),
         amount,
-        description,
+        description
       };
       const expenseExists = await this.gateway.findExpenses(criteria);
       if (expenseExists) {
-        this.gateway.loggerInfo('Registro de despesa já existe', { requestTxt: JSON.stringify(expenseExists)});
+        this.gateway.loggerInfo('Registro de despesa já existe', {
+          requestTxt: JSON.stringify(expenseExists)
+        });
         continue;
       }
 
@@ -62,27 +81,31 @@ export class CreateExpensesInteractor {
       const expense = await this.gateway.createExpenses(data);
       expenses.push({
         amount: expense.amount,
-			  description: expense.description,
-			  reference_month: expense.reference_month,
-        status: expense.status,
+        description: expense.description,
+        reference_month: expense.reference_month,
+        status: expense.status
       });
     }
 
     return expenses;
   }
 
-  private async createSingleExpense(input: InputCreateExpenses): Promise<ExpenseOutput[]> {
+  private async createSingleExpense(
+    input: InputCreateExpenses
+  ): Promise<ExpenseOutput[]> {
     const { amount, description, id_user, status } = input;
 
     const criteria: FindExpensesCriteria = {
       id_user,
       reference_month: this.formatMonthYear(new Date()),
       amount,
-      description,
+      description
     };
     const expenseExists = await this.gateway.findExpenses(criteria);
     if (expenseExists) {
-      this.gateway.loggerInfo('Registro de despesa já existe', { requestTxt: JSON.stringify(expenseExists)});
+      this.gateway.loggerInfo('Registro de despesa já existe', {
+        requestTxt: JSON.stringify(expenseExists)
+      });
       return [];
     }
 
@@ -95,12 +118,14 @@ export class CreateExpensesInteractor {
     };
 
     const expense = await this.gateway.createExpenses(data);
-    return [{
-      amount: expense.amount,
-      description: expense.description,
-      reference_month: expense.reference_month,
-      status: expense.status,
-    }];
+    return [
+      {
+        amount: expense.amount,
+        description: expense.description,
+        reference_month: expense.reference_month,
+        status: expense.status
+      }
+    ];
   }
 
   private formatMonthYear(date: Date): string {

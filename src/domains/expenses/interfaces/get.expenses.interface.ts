@@ -19,7 +19,7 @@ export type GetExpensesGatewayParams = {
 };
 
 export interface GetExpensesControllerParams {
-  interactor: GetExpensesInteractor
+  interactor: GetExpensesInteractor;
 }
 
 export interface IGetExpensesGateway {

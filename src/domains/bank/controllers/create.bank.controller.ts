@@ -13,13 +13,16 @@ export class CreateBankController implements ICreateBankController {
     this.interactor = params.interactor;
   }
 
-  public async createBank(request: Request, response: Response): Promise<Response> {
-    const {name, amount} = request.body
+  public async createBank(
+    request: Request,
+    response: Response
+  ): Promise<Response> {
+    const { name, amount } = request.body;
     const input: InputCreateBank = {
       name,
       amount,
-      id_user: Number(request.user?.id),
-    }
+      id_user: Number(request.user?.id)
+    };
     const result = await this.interactor.execute(input);
     return response.status(result.status).json(result.body);
   }

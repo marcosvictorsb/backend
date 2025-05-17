@@ -7,13 +7,12 @@ import { GetExpensesController } from '../controllers';
 import { Presenter } from '../../../protocols/presenter';
 import { GetExpensesGateway } from '../gateways/get.expenses.gateway';
 
-
 const expenseRepository = new ExpenseRepository({ model: ExpenseModel });
 
 const gateway: GetExpensesGatewayParams = {
   repository: expenseRepository,
   logger
-}
+};
 
 const ExpenseGateway = new GetExpensesGateway(gateway);
 const presenter = new Presenter();

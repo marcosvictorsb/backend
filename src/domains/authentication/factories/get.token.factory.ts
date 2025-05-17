@@ -1,27 +1,29 @@
-import { UserRepository } from "../../users/repositories/user.repository"
-import { GetTokenGateway } from "../gateways/get.token.gateway"
-import { GetTokenInteractor } from "../usecases/get.token.interactor"
-import { UserModel } from "./../../../domains/users/model/user.model"
-import { Presenter } from "../../../protocols/presenter"
-import { GetTokenDependencies, IAuthenticationGatewayDependencies } from "../interfaces"
-import { GetTokenController } from "../controllers/get.token.controller"
-import logger from "../../../config/logger"
+import { UserRepository } from '../../users/repositories/user.repository';
+import { GetTokenGateway } from '../gateways/get.token.gateway';
+import { GetTokenInteractor } from '../usecases/get.token.interactor';
+import { UserModel } from './../../../domains/users/model/user.model';
+import { Presenter } from '../../../protocols/presenter';
+import {
+  GetTokenDependencies,
+  IAuthenticationGatewayDependencies
+} from '../interfaces';
+import { GetTokenController } from '../controllers/get.token.controller';
+import logger from '../../../config/logger';
 
 const repositories: IAuthenticationGatewayDependencies = {
   repositories: {
     user: new UserRepository({ model: UserModel })
   },
   logger
-}
+};
 
 const presenter = new Presenter();
 
-
-const getTokenGateway = new GetTokenGateway(repositories)
-const getTokenInteractor = new GetTokenInteractor(getTokenGateway, presenter)
+const getTokenGateway = new GetTokenGateway(repositories);
+const getTokenInteractor = new GetTokenInteractor(getTokenGateway, presenter);
 
 const useCases: GetTokenDependencies = {
   interactor: getTokenInteractor
-}
+};
 
-export const getTokenController = new GetTokenController(useCases)
+export const getTokenController = new GetTokenController(useCases);

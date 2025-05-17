@@ -5,7 +5,7 @@ services:
     container_name: mysql
     restart: always
     ports:
-      - "3306:3306"
+      - '3306:3306'
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: gunno
@@ -25,17 +25,17 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       - mysql
     env_file:
-      - .env  
+      - .env
     networks:
       - app-network
 
 volumes:
-  mysql_data:  
-  
+  mysql_data:
+
 networks:
   app-network:
     driver: bridge

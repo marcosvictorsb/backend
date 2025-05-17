@@ -17,41 +17,39 @@ UserModel.init(
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER
     },
     name: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     email: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     password: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING
     },
     created_at: {
       allowNull: false,
       type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
+      defaultValue: DataTypes.NOW
     },
     updated_at: {
       allowNull: false,
       type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
+      defaultValue: DataTypes.NOW
     },
     deleted_at: {
       allowNull: true,
-      type: DataTypes.DATE,
-    },
+      type: DataTypes.DATE
+    }
   },
   {
     sequelize: mysql,
     tableName: 'users',
     timestamps: true,
     underscored: true,
-    paranoid: true,
+    paranoid: true
   }
 );
-
-
 
 export { UserModel };

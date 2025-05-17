@@ -1,19 +1,34 @@
-import { IIncomeRepository, IUpdateIncomeGateway, UpdateIncomeGatewayParams, UpdateIncomeData, FindIncomesCriteria } from '../interfaces';
+import {
+  IIncomeRepository,
+  IUpdateIncomeGateway,
+  UpdateIncomeGatewayParams,
+  UpdateIncomeData,
+  FindIncomesCriteria
+} from '../interfaces';
 import { IncomeEntity } from '../entity/income.entity';
 import { MixUpdateIncomeService } from '../../../adapters/gateways/';
-import { FindBankCriteria, IBankRepository, UpdateBankData } from '../../../domains/bank/interfaces';
+import {
+  FindBankCriteria,
+  IBankRepository,
+  UpdateBankData
+} from '../../../domains/bank/interfaces';
 import { BankEntity } from '../../../domains/bank/entities/bank.entity';
 
-export class UpdateIncomeGateway extends MixUpdateIncomeService implements IUpdateIncomeGateway {
+export class UpdateIncomeGateway
+  extends MixUpdateIncomeService
+  implements IUpdateIncomeGateway
+{
   incomeRepository: IIncomeRepository;
-  bankRepository: IBankRepository
+  bankRepository: IBankRepository;
 
   constructor(params: UpdateIncomeGatewayParams) {
     super(params);
     this.incomeRepository = params.repository;
-    this.bankRepository = params.bankRepository
+    this.bankRepository = params.bankRepository;
   }
-  async findIncome(criteria: FindIncomesCriteria): Promise<IncomeEntity | undefined> {
+  async findIncome(
+    criteria: FindIncomesCriteria
+  ): Promise<IncomeEntity | undefined> {
     return await this.incomeRepository.find(criteria);
   }
 

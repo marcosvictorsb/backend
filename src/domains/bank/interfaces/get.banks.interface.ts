@@ -5,8 +5,8 @@ import { GetBanksInteractor } from '../usecases';
 import { FindBankCriteria, IBankRepository } from './index';
 
 export type InputGetBanks = {
-  id_user: number
-}
+  id_user: number;
+};
 
 export type GetBanksData = {
   // Defina os campos de dados aqui
@@ -19,7 +19,7 @@ export type GetBanksGatewayParams = {
 
 export type GetBanksControllerParams = {
   interactor: GetBanksInteractor;
-}
+};
 
 export interface IGetBanksGateway {
   getBanks(criteria: FindBankCriteria): Promise<BankEntity[] | null>;

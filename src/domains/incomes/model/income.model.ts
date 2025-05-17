@@ -3,7 +3,6 @@ import mysql from '../../../infra/database/connection/mysql';
 import { UserModel } from '../../users/model/user.model';
 import BankModel from '../../../domains/bank/model/bank.model';
 
-
 class IncomeModel extends Model {
   id!: number;
   amount!: number;
@@ -26,36 +25,36 @@ IncomeModel.init(
     },
     amount: {
       type: DataTypes.BIGINT,
-      allowNull: false,
+      allowNull: false
     },
     description: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
     reference_month: {
       type: DataTypes.STRING,
       allowNull: false
-    }, 
+    },
     status: {
       type: DataTypes.STRING,
-      allowNull: false,   
+      allowNull: false,
       defaultValue: 'aguardando recebimento'
     },
-    id_user:{
+    id_user: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: UserModel,
-        key: 'id',
-      },
+        key: 'id'
+      }
     },
-     id_bank:{
+    id_bank: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: BankModel,
-        key: 'id',
-      },
+        key: 'id'
+      }
     },
     created_at: {
       allowNull: false,
@@ -69,19 +68,19 @@ IncomeModel.init(
     },
     deleted_at: {
       allowNull: true,
-      type: DataTypes.DATE,
-    },
+      type: DataTypes.DATE
+    }
   },
   {
     sequelize: mysql,
     tableName: 'incomes',
     timestamps: true,
     underscored: true,
-    paranoid: true,
+    paranoid: true
   }
-)
+);
 
-IncomeModel.belongsTo(UserModel, { foreignKey: 'id_user', as: 'users' })
-IncomeModel.belongsTo(BankModel, { foreignKey: 'id_bank', as: 'banks' })
+IncomeModel.belongsTo(UserModel, { foreignKey: 'id_user', as: 'users' });
+IncomeModel.belongsTo(BankModel, { foreignKey: 'id_bank', as: 'banks' });
 
-export default IncomeModel
+export default IncomeModel;

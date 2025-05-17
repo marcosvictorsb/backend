@@ -1,1 +1,1 @@
-export * from './create.bank.gateway'
+export * from './create.bank.gateway';

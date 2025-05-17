@@ -8,16 +8,17 @@ import { CreateUserGatewayParams } from '../interfaces/';
 import { CreateUserController } from '../controllers/create.user.controller';
 import { Presenter } from '../../../protocols/presenter';
 
-
 const userRepository = new UserRepository({ model: UserModel });
 
 const gateway: CreateUserGatewayParams = {
   repository: userRepository,
   bcrypt,
   logger
-}
+};
 
 const userGateway = new CreateUserGateway(gateway);
 const presenter = new Presenter();
 const createUserInteractor = new CreateUserInteractor(userGateway, presenter);
-export const createUserController = new CreateUserController({ useCases: {createUser: createUserInteractor}});
+export const createUserController = new CreateUserController({
+  useCases: { createUser: createUserInteractor }
+});

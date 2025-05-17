@@ -3,10 +3,14 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import logger from './../config/logger';
 
 export interface UserPayload extends JwtPayload {
-  id: number; 
+  id: number;
 }
 
-export const authMiddleware = (request: Request, response: Response, next: NextFunction) => {
+export const authMiddleware = (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
   try {
     const authHeader = request.header('authorization');
     if (!authHeader) {
@@ -25,7 +29,9 @@ export const authMiddleware = (request: Request, response: Response, next: NextF
 
     const secretKey = process.env.JWT_SECRET_SIGN;
     if (!secretKey) {
-      return response.status(500).json({ error: 'O segredo do JWT não está definido' });
+      return response
+        .status(500)
+        .json({ error: 'O segredo do JWT não está definido' });
     }
 
     const decoded = jwt.verify(token, secretKey) as UserPayload;

@@ -33,15 +33,15 @@ class Deploy {
     const digest = this.calculateSignature(secret, payload);
 
     logger.debug('Signature verification', { signature, digest });
-    logger.info('Verificando: verifyWebhookSignature:', signature === digest)
+    logger.info('Verificando: verifyWebhookSignature:', signature === digest);
     return signature === digest;
   }
 
   private calculateSignature(secret: string, payload: string): string {
-    return 'sha256=' + crypto
-      .createHmac('sha256', secret)
-      .update(payload)
-      .digest('hex');
+    return (
+      'sha256=' +
+      crypto.createHmac('sha256', secret).update(payload).digest('hex')
+    );
   }
 
   private processGitHubEvent(req: Request, res: Response): void {
@@ -96,17 +96,21 @@ class Deploy {
       const deployScriptPath = path.join(process.cwd(), 'deploy.sh');
 
       // Executa o script shell e captura a saída em tempo real
-      const child = exec(`bash ${deployScriptPath}`, {
-        cwd: process.cwd()
-      }, (error, stdout, stderr) => {
-        if (error) {
-          logger.error('Deployment failed', { error });
-          return res.status(500).send(`Deploy failed: ${error.message}`);
-        }
+      const child = exec(
+        `bash ${deployScriptPath}`,
+        {
+          cwd: process.cwd()
+        },
+        (error, stdout, stderr) => {
+          if (error) {
+            logger.error('Deployment failed', { error });
+            return res.status(500).send(`Deploy failed: ${error.message}`);
+          }
 
-        logger.info('Deployment completed successfully');
-        res.status(200).send('Deploy completed successfully');
-      });
+          logger.info('Deployment completed successfully');
+          res.status(200).send('Deploy completed successfully');
+        }
+      );
 
       // Pipe dos logs em tempo real
       child.stdout?.on('data', (data) => {
@@ -116,7 +120,6 @@ class Deploy {
       child.stderr?.on('data', (data) => {
         logger.error(`Deploy error: ${data.toString().trim()}`);
       });
-
     } catch (error: any) {
       logger.error('Deployment initialization failed', { error });
       res.status(500).send(`Deploy initialization failed: ${error.message}`);

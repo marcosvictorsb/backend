@@ -13,4 +13,4 @@ export function loadIn(server: Express) {
       }
     }
   });
-};
+}

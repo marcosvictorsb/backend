@@ -1,4 +1,3 @@
-
 import logger from '../../../config/logger';
 import { UserRepository } from '../repositories/user.repository';
 import { GetUsersGateway } from '../gateways';
@@ -8,13 +7,12 @@ import { GetUsersGatewayParams } from '../interfaces/';
 import { GetUsersController } from '../controllers';
 import { Presenter } from '../../../protocols/presenter';
 
-
 const userRepository = new UserRepository({ model: UserModel });
 
 const gateway: GetUsersGatewayParams = {
   repository: userRepository,
   logger
-}
+};
 
 const userGateway = new GetUsersGateway(gateway);
 const presenter = new Presenter();

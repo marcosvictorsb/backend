@@ -2,7 +2,6 @@ import { DataTypes, Model } from 'sequelize';
 import mysql from '../../../infra/database/connection/mysql';
 import { UserModel } from '../../users/model/user.model';
 
-
 class ExpenseModel extends Model {
   id!: number;
   amount!: number;
@@ -21,31 +20,31 @@ ExpenseModel.init(
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER
     },
     amount: {
       type: DataTypes.BIGINT,
-      allowNull: false,
+      allowNull: false
     },
     description: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
     reference_month: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    id_user:{
+    id_user: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: UserModel,
-        key: 'id',
-      },
+        key: 'id'
+      }
     },
     status: {
       type: DataTypes.STRING,
-      allowNull: false,   
+      allowNull: false,
       defaultValue: 'pendente'
     },
     created_at: {
@@ -60,18 +59,18 @@ ExpenseModel.init(
     },
     deleted_at: {
       allowNull: true,
-      type: DataTypes.DATE,
-    },
+      type: DataTypes.DATE
+    }
   },
   {
     sequelize: mysql,
     tableName: 'expenses',
     timestamps: true,
     underscored: true,
-    paranoid: true,
+    paranoid: true
   }
-)
+);
 
-ExpenseModel.belongsTo(UserModel, { foreignKey: 'id_user', as: 'users' })
+ExpenseModel.belongsTo(UserModel, { foreignKey: 'id_user', as: 'users' });
 
-export default ExpenseModel
+export default ExpenseModel;

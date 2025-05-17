@@ -1,1 +1,1 @@
-export * from './get.token.gateway'
+export * from './get.token.gateway';

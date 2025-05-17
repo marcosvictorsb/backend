@@ -5,9 +5,9 @@ module.exports = {
     {
       name: 'gunno-api',
       script: './dist/server.js',
-      instances: 'max',          
-      exec_mode: 'cluster', 
-      watch: false, 
+      instances: 'max',
+      exec_mode: 'cluster',
+      watch: false,
       env: {
         NODE_ENV: 'production'
       }
@@ -20,7 +20,8 @@ module.exports = {
       ref: 'origin/main',
       repo: process.env.REPO_URL,
       path: process.env.DEPLOY_PATH,
-      'post-deploy': 'npm install && npm run build && npm run migration && pm2 startOrRestart gunno-api --update-env'
+      'post-deploy':
+        'npm install && npm run build && npm run migration && pm2 startOrRestart gunno-api --update-env'
     }
   }
 };

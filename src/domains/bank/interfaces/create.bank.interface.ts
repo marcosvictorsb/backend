@@ -1,7 +1,11 @@
 import logger from '../../../config/logger';
 import { BankEntity } from '../entities/bank.entity';
 import { CreateBankInteractor } from '../usecases';
-import { CreateBankCriteria, FindBankCriteria, IBankRepository } from './bank.interface';
+import {
+  CreateBankCriteria,
+  FindBankCriteria,
+  IBankRepository
+} from './bank.interface';
 
 export type InputCreateBank = {
   id_user: number;
@@ -10,8 +14,8 @@ export type InputCreateBank = {
 };
 
 export type CreateBankControllerParams = {
-  interactor: CreateBankInteractor
-}
+  interactor: CreateBankInteractor;
+};
 
 export type CreateBankGatewayParams = {
   repository: IBankRepository;
@@ -20,7 +24,7 @@ export type CreateBankGatewayParams = {
 
 export interface ICreateBankGateway {
   createBank(data: CreateBankCriteria): Promise<BankEntity>;
-  findBank(criteria: FindBankCriteria): Promise<BankEntity | undefined>
+  findBank(criteria: FindBankCriteria): Promise<BankEntity | undefined>;
   loggerInfo(message: string, data?: unknown): void;
   loggerError(message: string, data?: unknown): void;
 }

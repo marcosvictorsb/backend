@@ -1,9 +1,9 @@
-import { ModelStatic } from "sequelize";
-import ExpenseModel from "../model/expense.model";
-import { CreateExpensesCriteria } from "./create.expenses.interface";
-import { ExpenseEntity } from "../entity/expenses.entity";
-import { DeleteExpenseData } from "./delete.expense.interface";
-import { UpdateExpenseData } from "./update.expense.interface";
+import { ModelStatic } from 'sequelize';
+import ExpenseModel from '../model/expense.model';
+import { CreateExpensesCriteria } from './create.expenses.interface';
+import { ExpenseEntity } from '../entity/expenses.entity';
+import { DeleteExpenseData } from './delete.expense.interface';
+import { UpdateExpenseData } from './update.expense.interface';
 
 export type FindExpensesCriteria = {
   id?: number;
@@ -14,22 +14,20 @@ export type FindExpensesCriteria = {
   created_at?: Date;
   updated_at?: Date;
   deleted_at?: Date;
-  createdStart?: string
-  createdEnd?: string
-}
+  createdStart?: string;
+  createdEnd?: string;
+};
 
 export type IExpenseRepositoryDependencies = {
-  model: ModelStatic<ExpenseModel>
-}
-
+  model: ModelStatic<ExpenseModel>;
+};
 
 export type ExpenseOutput = {
   amount: number;
   description: string;
   reference_month: string;
   status: string;
-}
-
+};
 
 export interface IExpenseRepository {
   create(data: CreateExpensesCriteria): Promise<ExpenseEntity>;

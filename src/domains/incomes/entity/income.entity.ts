@@ -11,21 +11,19 @@ export class IncomeEntity {
   public readonly updated_at?: Date;
   public readonly deleted_at?: Date;
 
-  constructor(params: 
-    {
-      id: number,
-      amount: number,
-      description: string,
-      reference_month: string,
-      type?: string,
-      status: string,
-      id_user: number,
-      id_bank: number,
-      created_at?: Date,
-      updated_at?: Date,
-      deleted_at?: Date
-    }) 
-  {
+  constructor(params: {
+    id: number;
+    amount: number;
+    description: string;
+    reference_month: string;
+    type?: string;
+    status: string;
+    id_user: number;
+    id_bank: number;
+    created_at?: Date;
+    updated_at?: Date;
+    deleted_at?: Date;
+  }) {
     this.id = params.id;
     this.amount = params.amount;
     this.description = params.description;
@@ -52,7 +50,7 @@ export class IncomeEntity {
       created_at: model.created_at,
       updated_at: model.updated_at,
       deleted_at: model.deleted_at
-    }
+    };
     return new IncomeEntity(params);
   }
 

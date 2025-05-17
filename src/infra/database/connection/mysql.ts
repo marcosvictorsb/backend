@@ -10,13 +10,12 @@ const dbName = process.env.DB_NAME as string;
 const host = process.env.DB_HOST as string;
 const dialect = process.env.DB_DIALECT as string;
 
-
 sequelize = new Sequelize(dbName, dbUser, dbPassword, {
-  dialect: dialect as any, 
+  dialect: dialect as any,
   host,
   logging: (msg) => {
-    logger.info("Sequelize SQL Log", { query: msg });
-  },
+    logger.info('Sequelize SQL Log', { query: msg });
+  }
 });
 
 export default sequelize;

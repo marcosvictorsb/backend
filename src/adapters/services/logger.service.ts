@@ -1,22 +1,22 @@
-import logger from "../../config/logger";
+import logger from '../../config/logger';
 
 type LoggerServiceDependencies = {
   logger: typeof logger;
-}
+};
 
 export type DataLogOutput = {
-  data?: any
-  teamsIds?: number[],
-  error?: any
-  input?: any
-  requestTxt?: string
+  data?: any;
+  teamsIds?: number[];
+  error?: any;
+  input?: any;
+  requestTxt?: string;
 
-  id_user?: number
-  id_expense?: number
-  id_income?: number
+  id_user?: number;
+  id_expense?: number;
+  id_income?: number;
 
-  id_bank?: number
-}
+  id_bank?: number;
+};
 
 export interface ILoggerMixin {
   loggerInfo(message: string, data?: DataLogOutput): void;

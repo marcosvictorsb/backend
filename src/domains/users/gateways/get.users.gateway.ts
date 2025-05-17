@@ -1,8 +1,16 @@
-import { IUserRepository, IGetUsersGateway, GetUsersGatewayParams, FindUserCriteria } from '../interfaces/';
+import {
+  IUserRepository,
+  IGetUsersGateway,
+  GetUsersGatewayParams,
+  FindUserCriteria
+} from '../interfaces/';
 import { UserEntity } from '../entities/user.entity';
 import { MixGetUsersService } from '../../../adapters/gateways';
 
-export class GetUsersGateway extends MixGetUsersService implements IGetUsersGateway {
+export class GetUsersGateway
+  extends MixGetUsersService
+  implements IGetUsersGateway
+{
   userRepository: IUserRepository;
 
   constructor(params: GetUsersGatewayParams) {

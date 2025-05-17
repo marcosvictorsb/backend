@@ -1,1 +1,1 @@
-export * from './get.token.interface'
+export * from './get.token.interface';

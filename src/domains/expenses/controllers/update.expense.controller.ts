@@ -13,7 +13,10 @@ export class UpdateExpenseController implements IUpdateExpenseController {
     this.interactor = params.interactor;
   }
 
-  public async updateExpense(request: Request, response: Response): Promise<Response> {
+  public async updateExpense(
+    request: Request,
+    response: Response
+  ): Promise<Response> {
     const result = await this.interactor.execute(request.body);
     return response.status(result.status).json(result.body);
   }

@@ -4,21 +4,21 @@ import { ExpenseEntity } from '../entity/expenses.entity';
 import { CreateExpensesInteractor } from '../usecases/create.expenses.interactor';
 import { FindExpensesCriteria, IExpenseRepository } from './expenses';
 
-export type InputCreateExpenses = {  
-  amount: number,
-  description: string,
-  id_user: number,
-  status: string,
-  is_recurring?: boolean,
-  recurring_count?: number,
+export type InputCreateExpenses = {
+  amount: number;
+  description: string;
+  id_user: number;
+  status: string;
+  is_recurring?: boolean;
+  recurring_count?: number;
 };
 
 export type CreateExpensesCriteria = {
-  amount: number,
-  description: string,
-  id_user: number,
-  reference_month: string,
-  status: string
+  amount: number;
+  description: string;
+  id_user: number;
+  reference_month: string;
+  status: string;
 };
 
 export type CreateExpensesGatewayParams = {

@@ -5,7 +5,7 @@ import { FindIncomesCriteria } from './incomes';
 import { IIncomeRepository } from './incomes';
 
 export type InputCalculateTotalIncomes = {
-  id_user: number
+  id_user: number;
 };
 
 export type CalculateTotalIncomesData = {
@@ -18,11 +18,13 @@ export type CalculateTotalIncomesGatewayParams = {
 };
 
 export type CalculateTotalIncomesControllerParams = {
-  interactor: CalculateTotalIncomesInteractor
-}
+  interactor: CalculateTotalIncomesInteractor;
+};
 
 export interface ICalculateTotalIncomesGateway {
-  findIncomes(criteria: FindIncomesCriteria): Promise<IncomeEntity[] | undefined>;
+  findIncomes(
+    criteria: FindIncomesCriteria
+  ): Promise<IncomeEntity[] | undefined>;
   loggerInfo(message: string, data?: unknown): void;
   loggerError(message: string, data?: unknown): void;
 }

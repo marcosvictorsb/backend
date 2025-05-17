@@ -8,7 +8,7 @@ const logLevels: Record<string, number> = {
   warn: 2,
   info: 3,
   debug: 4,
-  trace: 5,
+  trace: 5
 };
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -21,7 +21,7 @@ const logFormat = isProduction
           timestamp,
           level,
           message,
-          ...meta,
+          ...meta
         });
       })
     )
@@ -29,7 +29,8 @@ const logFormat = isProduction
       format.colorize(),
       format.timestamp({ format: 'DD-MM-YYYY HH:mm:ss' }),
       format.printf(({ timestamp, level, message, ...meta }) => {
-        const metaString = meta && Object.keys(meta).length ? JSON.stringify(meta, null, 2) : '';
+        const metaString =
+          meta && Object.keys(meta).length ? JSON.stringify(meta, null, 2) : '';
         return `${timestamp} [${level}]: ${message} ${metaString}`;
       })
     );
@@ -37,10 +38,14 @@ const logFormat = isProduction
 const logger: Logger = createLogger({
   levels: logLevels,
   format: logFormat,
-  transports: [new transports.Console()],
+  transports: [new transports.Console()]
 });
 
-export const setupRequestLogging = (request: Request, response: Response, next: NextFunction) => {
+export const setupRequestLogging = (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
   try {
     const requestId = uuidv4();
     response.setHeader('x-request-id', requestId);
@@ -50,10 +55,12 @@ export const setupRequestLogging = (request: Request, response: Response, next: 
     logger.info(`🚀 Request iniciado`, {
       request_id: requestId,
       method: request.method,
-      path: request.url,
+      path: request.url
     });
 
-    logger.debug(`Request processing started for ${request.method} ${request.url}`);
+    logger.debug(
+      `Request processing started for ${request.method} ${request.url}`
+    );
 
     response.on('finish', () => {
       const duration = `${Date.now() - start}ms`;
@@ -62,7 +69,7 @@ export const setupRequestLogging = (request: Request, response: Response, next: 
         method: request.method,
         path: request.url,
         status: response.statusCode,
-        duration,
+        duration
       });
     });
 
@@ -71,7 +78,7 @@ export const setupRequestLogging = (request: Request, response: Response, next: 
         request_id: requestId,
         method: request.method,
         path: request.url,
-        error: err.message,
+        error: err.message
       });
     });
 

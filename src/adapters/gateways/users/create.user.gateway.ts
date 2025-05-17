@@ -1,4 +1,6 @@
-import { LoggerMixin, EncryptionService } from "../../services";
+import { LoggerMixin, EncryptionService } from '../../services';
 
-class BaseGateway { constructor(...args: any[]) {} }
+class BaseGateway {
+  constructor(...args: any[]) {}
+}
 export const MixCreateUserService = LoggerMixin(EncryptionService(BaseGateway));

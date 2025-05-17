@@ -4,7 +4,10 @@ import { UserEntity } from '../entities/user.entity';
 import { HttpResponse, IPresenter } from '../../../protocols';
 
 export class CreateUserInteractor {
-  constructor(private readonly gateway: ICreateUserGateway, private presenter: IPresenter ) {}
+  constructor(
+    private readonly gateway: ICreateUserGateway,
+    private presenter: IPresenter
+  ) {}
 
   async execute(input: InputCreateUser): Promise<HttpResponse> {
     this.gateway.loggerInfo('Creating user', { user: JSON.stringify(input) });
@@ -18,20 +21,24 @@ export class CreateUserInteractor {
       }
 
       const createUserData: CreateUserData = {
-        email, name, password: this.gateway.encryptPassword(password)
-      }
+        email,
+        name,
+        password: this.gateway.encryptPassword(password)
+      };
       const userCreated = await this.gateway.createUser(createUserData);
-      if(!userCreated) {
+      if (!userCreated) {
         this.gateway.loggerInfo('Usuário não encontrado', email);
         return this.presenter.notFound('Usuário não encontrado');
       }
-      this.gateway.loggerInfo('Usuário criado com sucesso', JSON.stringify({ email: userCreated.email, name: userCreated.name }));
-      
+      this.gateway.loggerInfo(
+        'Usuário criado com sucesso',
+        JSON.stringify({ email: userCreated.email, name: userCreated.name })
+      );
+
       return this.presenter.created(userCreated);
     } catch (error) {
-      this.gateway.loggerError('Erro ao criar usuário', error );
+      this.gateway.loggerError('Erro ao criar usuário', error);
       return this.presenter.serverError('Erro ao criar usuário');
     }
-    
   }
 }

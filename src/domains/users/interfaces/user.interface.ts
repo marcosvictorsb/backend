@@ -11,29 +11,27 @@ export type FindUserCriteria = {
   password?: string;
   id_company?: number;
   limit?: number;
-}
+};
 
 export type UpdateCriteria = {
-  id: number
-}
+  id: number;
+};
 
 export type DeleteCriteria = {
-  id: number
-}
+  id: number;
+};
 
 export type UserRepositoryParams = {
-  model: ModelStatic<UserModel>; 
-}
+  model: ModelStatic<UserModel>;
+};
 
-export type IToken = { 
+export type IToken = {
   sign(user: User, secret: string, options: unknown): string;
-}
-
-
+};
 
 export interface UserControllerParams {
   useCases: {
-    createUser: CreateUserInteractor
+    createUser: CreateUserInteractor;
   };
 }
 
@@ -50,4 +48,3 @@ export interface IUserRepository {
   update(criteria: UpdateCriteria, data: Partial<User>): Promise<User | null>;
   delete(criteria: DeleteCriteria): Promise<boolean>;
 }
-

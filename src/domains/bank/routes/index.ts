@@ -3,16 +3,15 @@ import * as factories from '../factories';
 import { authMiddleware } from '../../../middlewares/auth';
 
 const router = Router();
-const {
-  createBanksController,
-  getBanksController
-} = factories;
+const { createBanksController, getBanksController } = factories;
 
-router.post("/", authMiddleware,
-  (request: Request, response: Response) => createBanksController.createBank(request, response));
+router.post('/', authMiddleware, (request: Request, response: Response) =>
+  createBanksController.createBank(request, response)
+);
 
-router.get("/", authMiddleware,
-  (request: Request, response: Response) => getBanksController.getBanks(request, response));
+router.get('/', authMiddleware, (request: Request, response: Response) =>
+  getBanksController.getBanks(request, response)
+);
 
 // router.delete("/:id", authMiddleware,
 //   (request: Request, response: Response) => factories.deleteIncomeController.deleteIncome(request, response));

@@ -19,11 +19,13 @@ export type GetIncomesGatewayParams = {
 };
 
 export interface GetIncomesControllerParams {
-  interactor: GetIncomesInteractor
+  interactor: GetIncomesInteractor;
 }
 
 export interface IGetIncomesGateway {
-  getIncomes(criteria: FindIncomesCriteria): Promise<IncomeEntity[] | undefined>;
+  getIncomes(
+    criteria: FindIncomesCriteria
+  ): Promise<IncomeEntity[] | undefined>;
   loggerInfo(message: string, data?: DataLogOutput): void;
   loggerError(message: string, data?: DataLogOutput): void;
 }

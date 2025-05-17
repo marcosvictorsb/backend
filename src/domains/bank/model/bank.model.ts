@@ -1,5 +1,5 @@
-import { UserModel } from "../../users/model/user.model";
-import { DataTypes, Model } from "sequelize";
+import { UserModel } from '../../users/model/user.model';
+import { DataTypes, Model } from 'sequelize';
 import mysql from '../../../infra/database/connection/mysql';
 
 class BankModel extends Model {
@@ -18,23 +18,23 @@ BankModel.init(
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER,
+      type: DataTypes.INTEGER
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
     amount: {
       type: DataTypes.BIGINT,
-      allowNull: false,
+      allowNull: false
     },
-    id_user:{
+    id_user: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: UserModel,
-        key: 'id',
-      },
+        key: 'id'
+      }
     },
     created_at: {
       allowNull: false,
@@ -48,18 +48,18 @@ BankModel.init(
     },
     deleted_at: {
       allowNull: true,
-      type: DataTypes.DATE,
-    },
+      type: DataTypes.DATE
+    }
   },
   {
     sequelize: mysql,
     tableName: 'banks',
     timestamps: true,
     underscored: true,
-    paranoid: true,
+    paranoid: true
   }
-)
+);
 
-BankModel.belongsTo(UserModel, { foreignKey: 'id_user', as: 'users' })
+BankModel.belongsTo(UserModel, { foreignKey: 'id_user', as: 'users' });
 
-export default BankModel
+export default BankModel;

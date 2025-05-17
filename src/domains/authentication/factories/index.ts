@@ -1,1 +1,1 @@
-export * from './get.token.factory'
+export * from './get.token.factory';

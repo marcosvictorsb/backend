@@ -1,8 +1,17 @@
-import { IExpenseRepository, IDeleteExpenseGateway, DeleteExpenseGatewayParams, DeleteExpenseData, FindExpensesCriteria } from '../interfaces/';
+import {
+  IExpenseRepository,
+  IDeleteExpenseGateway,
+  DeleteExpenseGatewayParams,
+  DeleteExpenseData,
+  FindExpensesCriteria
+} from '../interfaces/';
 import { ExpenseEntity } from '../entity/expenses.entity';
 import { MixDeleteExpenseService } from '../../../adapters/gateways';
 
-export class DeleteExpenseGateway extends MixDeleteExpenseService implements IDeleteExpenseGateway {
+export class DeleteExpenseGateway
+  extends MixDeleteExpenseService
+  implements IDeleteExpenseGateway
+{
   expenseRepository: IExpenseRepository;
 
   constructor(params: DeleteExpenseGatewayParams) {
@@ -14,7 +23,9 @@ export class DeleteExpenseGateway extends MixDeleteExpenseService implements IDe
     return await this.expenseRepository.delete(data);
   }
 
-  async findExpense(criteria: FindExpensesCriteria): Promise<ExpenseEntity | null> {
+  async findExpense(
+    criteria: FindExpensesCriteria
+  ): Promise<ExpenseEntity | null> {
     return await this.expenseRepository.find(criteria);
   }
 }

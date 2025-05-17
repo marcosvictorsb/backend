@@ -7,17 +7,15 @@ export class BankEntity {
   public readonly updated_at?: Date;
   public readonly deleted_at?: Date;
 
-  constructor(params: 
-    {
-      id: number,
-      amount: number,
-      name: string,
-      id_user: number,
-      created_at?: Date,
-      updated_at?: Date,
-      deleted_at?: Date
-    }) 
-  {
+  constructor(params: {
+    id: number;
+    amount: number;
+    name: string;
+    id_user: number;
+    created_at?: Date;
+    updated_at?: Date;
+    deleted_at?: Date;
+  }) {
     this.id = params.id;
     this.amount = params.amount;
     this.name = params.name;
@@ -25,5 +23,5 @@ export class BankEntity {
     this.created_at = params?.created_at;
     this.updated_at = params?.updated_at;
     this.deleted_at = params?.deleted_at;
-  }  
+  }
 }

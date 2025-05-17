@@ -25,11 +25,11 @@ export type CalculateTotalExpensesGatewayParams = {
 };
 
 export type CalculateTotalExpensesControllerParams = {
-  interactor: CalculateTotalExpensesInteractor
-}
+  interactor: CalculateTotalExpensesInteractor;
+};
 
 export interface ICalculateTotalExpensesGateway {
-  findExpenses(criteria: FindExpensesCriteria): Promise<ExpenseEntity[] | null>
+  findExpenses(criteria: FindExpensesCriteria): Promise<ExpenseEntity[] | null>;
   loggerInfo(message: string, data?: DataLogOutput): void;
   loggerError(message: string, data?: DataLogOutput): void;
 }

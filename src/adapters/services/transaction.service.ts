@@ -6,7 +6,9 @@ export interface ITransactionMixin {
   rollbackTransaction(transaction: Transaction): Promise<void>;
 }
 
-export function TransactionMixin<T extends new (...args: any[]) => {}>(Base: T) {
+export function TransactionMixin<T extends new (...args: any[]) => {}>(
+  Base: T
+) {
   return class extends Base {
     private sequelize: Sequelize;
 
