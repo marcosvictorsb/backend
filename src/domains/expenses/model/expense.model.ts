@@ -11,6 +11,7 @@ class ExpenseModel extends Model {
   id_user!: number;
   id_bank!: number;
   status!: string;
+  date_payment!: Date;
   created_at!: Date;
   updated_at!: Date;
   deleted_at!: Date;
@@ -56,6 +57,10 @@ ExpenseModel.init(
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: 'pendente'
+    },    
+    date_payment: {
+      allowNull: false,
+      type: DataTypes.DATE,
     },
     created_at: {
       allowNull: false,

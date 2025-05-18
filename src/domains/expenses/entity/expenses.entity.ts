@@ -7,6 +7,7 @@ export class ExpenseEntity {
   public readonly status: string;
   public readonly id_user: number;
   public readonly id_bank?: number;
+  public readonly date_payment?: Date;
   public readonly created_at?: Date;
   public readonly updated_at?: Date;
   public readonly deleted_at?: Date;
@@ -20,6 +21,7 @@ export class ExpenseEntity {
     status: string;
     id_user: number;
     id_bank?: number;
+    date_payment?: Date;
     created_at?: Date;
     updated_at?: Date;
     deleted_at?: Date;
@@ -32,6 +34,7 @@ export class ExpenseEntity {
     this.status = params.status;
     this.id_user = params.id_user;
     this.id_bank = params.id_bank;
+    this.date_payment = params?.date_payment;    
     this.created_at = params?.created_at;
     this.updated_at = params?.updated_at;
     this.deleted_at = params?.deleted_at;
@@ -47,6 +50,7 @@ export class ExpenseEntity {
       status: model.status,
       id_user: model.id_user,
       id_bank: model.id_bank,
+      date_payment: model.date_payment,
       created_at: model.created_at,
       updated_at: model.updated_at,
       deleted_at: model.deleted_at

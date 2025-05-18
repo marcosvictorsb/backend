@@ -2,7 +2,6 @@ import { ExpenseStatus, IUpdateExpenseGateway, UpdateExpenseData } from '../inte
 import { IPresenter } from '../../../protocols/presenter';
 import { HttpResponse } from '../../../protocols/http';
 import { InputUpdateExpense } from '../interfaces/';
-import { UpdateIncomeData } from '../../../domains/incomes/interfaces';
 
 export class UpdateExpenseInteractor {
   constructor(
@@ -15,7 +14,7 @@ export class UpdateExpenseInteractor {
       this.gateway.loggerInfo('Atualizando despesa', {
         requestTxt: JSON.stringify(input)
       });
-      const { id, amount, description, id_user, status, id_bank } = input;
+      const { id, amount, description, id_user, status, id_bank, date_payment } = input;
       
       const currentExpense = await this.gateway.findExpense({ id });
       if (!currentExpense) {
@@ -77,16 +76,17 @@ export class UpdateExpenseInteractor {
         }
       }
 
-      const updateCriteria: UpdateIncomeData = {
+      const updateCriteria: UpdateExpenseData = {
         id,
         amount,
         description,
         id_user,
         status,
-        id_bank
+        id_bank,
+        date_payment
       };
       await this.gateway.updateExpense(updateCriteria);
-      this.gateway.loggerInfo('Income atualizado');
+      this.gateway.loggerInfo('Expense atualizado');
 
       return this.presenter.OK();
     } catch (error) {

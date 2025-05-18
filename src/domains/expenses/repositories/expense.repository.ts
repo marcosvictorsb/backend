@@ -64,6 +64,7 @@ export class ExpenseRepository implements IExpenseRepository {
       id_user: expense.id_user,
       id_bank: expense.id_bank,
       status: expense.status,
+      date_payment: expense.date_payment,
       created_at: expense.created_at,
       updated_at: expense.updated_at,
       deleted_at: expense.deleted_at
@@ -101,7 +102,8 @@ export class ExpenseRepository implements IExpenseRepository {
           reference_month: expense.reference_month,
           status: expense.status,
           id_user: expense.id_user,
-          id_bank: expense.id_bank
+          id_bank: expense.id_bank,
+          date_payment: expense.date_payment
         })
     );
   }

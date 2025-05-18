@@ -13,6 +13,7 @@ export type InputUpdateExpense = {
   description: string;
   id_user: number;
   id_bank: number,
+  date_payment: Date;
   status: string;
 };
 
@@ -22,7 +23,8 @@ export type UpdateExpenseData = {
   description: string;
   id_user: number;
   id_bank: number,
-  status: string;
+  status: string;  
+  date_payment: Date;
 };
 
 export type UpdateExpenseGatewayParams = {

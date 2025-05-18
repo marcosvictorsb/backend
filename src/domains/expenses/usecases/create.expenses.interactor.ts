@@ -116,7 +116,7 @@ export class CreateExpensesInteractor {
   private async createSingleExpense(
     input: InputCreateExpenses
   ): Promise<ExpenseOutput[]> {
-    const { amount, description, id_user, status, id_bank } = input;
+    const { amount, description, id_user, status, id_bank, date_payment } = input;
 
     const criteria: FindExpensesCriteria = {
       id_user,
@@ -138,7 +138,8 @@ export class CreateExpensesInteractor {
       id_user,
       reference_month: this.formatMonthYear(new Date()),
       status,
-      id_bank
+      id_bank,
+      date_payment: status === ExpenseStatus.PAID ? date_payment : null
     };
 
     const expense = await this.gateway.createExpenses(data);

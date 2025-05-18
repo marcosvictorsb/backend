@@ -86,7 +86,7 @@ export class UpdateIncomeInteractor {
         description,
         id_user,
         status,
-        id_bank
+        id_bank,
       };
       await this.gateway.updateIncome(updateCriteria);
       this.gateway.loggerInfo('Income atualizado');
