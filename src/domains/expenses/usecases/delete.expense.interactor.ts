@@ -1,7 +1,8 @@
-import { IDeleteExpenseGateway } from '../interfaces/';
+import { ExpenseStatus, IDeleteExpenseGateway } from '../interfaces/';
 import { IPresenter } from '../../../protocols/presenter';
 import { HttpResponse } from '../../../protocols/http';
 import { InputDeleteExpense } from '../interfaces/';
+import { UpdateBankData } from '../../../domains/bank/interfaces';
 
 export class DeleteExpenseInteractor {
   constructor(
@@ -12,8 +13,8 @@ export class DeleteExpenseInteractor {
   async execute(input: InputDeleteExpense): Promise<HttpResponse> {
     try {
       const { id_user, id } = input;
-      const expenseExists = await this.gateway.findExpense({ id_user, id });
-      if (!expenseExists) {
+      const expense = await this.gateway.findExpense({ id_user, id });
+      if (!expense) {
         this.gateway.loggerInfo('Despesa não encontrada', {
           id_user,
           id_expense: id
@@ -21,6 +22,23 @@ export class DeleteExpenseInteractor {
         return this.presenter.notFound('Despesa não encontrada');
       }
       await this.gateway.deleteExpense({ id_user, id });
+
+
+      if (expense.status === ExpenseStatus.PAID) {
+        const bank = await this.gateway.findBank({ id: expense.id_bank });
+        if (!bank) {
+          this.gateway.loggerInfo('Banco não encontrado');
+          return this.presenter.notFound('Banco não encontrado');
+        }
+        const newAmount = bank.amount + Number(expense.amount);
+        const criteriaUpdate: UpdateBankData = {
+          amount: newAmount,
+          id: bank.id
+        };
+        await this.gateway.updateBank(criteriaUpdate);
+      }
+
+
       this.gateway.loggerInfo('Despesa deletada');
       return this.presenter.OK();
     } catch (error) {

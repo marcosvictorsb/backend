@@ -49,42 +49,42 @@ export class IncomeRepository implements IIncomeRepository {
   }
 
   public async create(data: CreateIncomesCriteria): Promise<IncomeEntity> {
-    const Income = await this.model.create(data);
+    const income = await this.model.create(data);
     return new IncomeEntity({
-      id: Income.id,
-      amount: Income.amount,
-      description: Income.description,
-      reference_month: Income.reference_month,
-      id_user: Income.id_user,
-      id_bank: Income.id_bank,
-      status: Income.status,
-      created_at: Income.created_at,
-      updated_at: Income.updated_at,
-      deleted_at: Income.deleted_at
+      id: income.id,
+      amount: income.amount,
+      description: income.description,
+      reference_month: income.reference_month,
+      id_user: income.id_user,
+      id_bank: income.id_bank,
+      status: income.status,
+      created_at: income.created_at,
+      updated_at: income.updated_at,
+      deleted_at: income.deleted_at
     });
   }
 
   public async find(
     criteria: FindIncomesCriteria
   ): Promise<IncomeEntity | undefined> {
-    const Income = await this.model.findOne({
+    const income = await this.model.findOne({
       where: this.getConditions(criteria),
       raw: true
     });
 
-    if (!Income) return undefined;
+    if (!income) return undefined;
 
-    return new IncomeEntity(Income);
+    return new IncomeEntity(income);
   }
 
   public async findAll(criteria: FindIncomesCriteria): Promise<IncomeEntity[]> {
-    const Incomes = await this.model.findAll({
+    const income = await this.model.findAll({
       where: this.getConditions(criteria)
     });
 
-    if (!Incomes.length) return [];
+    if (!income.length) return [];
 
-    return Incomes.map(
+    return income.map(
       (Income: IncomeEntity) =>
         new IncomeEntity({
           id: Income.id,

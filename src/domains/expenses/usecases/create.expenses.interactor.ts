@@ -1,10 +1,12 @@
 import {
   ExpenseOutput,
+  ExpenseStatus,
   FindExpensesCriteria,
   ICreateExpensesGateway
 } from '../interfaces';
 import { IPresenter, HttpResponse } from '../../../protocols';
 import { InputCreateExpenses } from '../interfaces';
+import { FindBankCriteria, UpdateBankData } from '../../../domains/bank/interfaces';
 
 export class CreateExpensesInteractor {
   constructor(
@@ -17,7 +19,7 @@ export class CreateExpensesInteractor {
       this.gateway.loggerInfo('Criando registros de despesas', {
         requestTxt: JSON.stringify(input)
       });
-      const { is_recurring } = input;
+      const { is_recurring, id_bank, amount, status  } = input;
 
       const expenses = is_recurring
         ? await this.createRecurringExpenses(input)
@@ -32,12 +34,31 @@ export class CreateExpensesInteractor {
         );
       }
 
+      const bankCriteria: FindBankCriteria = {
+        id: id_bank
+      };
+
+      if (status === ExpenseStatus.PAID) {
+        const bank = await this.gateway.findBank(bankCriteria);
+        if (!bank) {
+          this.gateway.loggerInfo('Banco não encontrado', {
+            requestTxt: JSON.stringify(bank)
+          });
+          return this.presenter.notFound('Banco não encontrado');
+        }
+        const updatedAmount = bank.amount - Number(amount);
+        const criteriaUpdate: UpdateBankData = {
+          amount: updatedAmount,
+          id: bank.id
+        };
+        await this.gateway.updateBank(criteriaUpdate);
+      }
+
       this.gateway.loggerInfo('Registros de despesas criados com sucesso', {
         requestTxt: JSON.stringify(expenses)
       });
       return this.presenter.created(expenses);
     } catch (error) {
-      console.log(error);
       this.gateway.loggerError('Erro ao criar despesas', { error });
       return this.presenter.serverError('Erro ao criar despesas');
     }
@@ -46,7 +67,7 @@ export class CreateExpensesInteractor {
   private async createRecurringExpenses(
     input: InputCreateExpenses
   ): Promise<ExpenseOutput[]> {
-    const { amount, description, id_user, recurring_count, status } = input;
+    const { amount, description, id_user, recurring_count, status, id_bank } = input;
     const reference_month = new Date();
     const expenses = [];
     const firstExpense = 0;
@@ -75,7 +96,8 @@ export class CreateExpensesInteractor {
         id_user,
         is_recurring: true,
         reference_month: this.formatMonthYear(month),
-        status: index === firstExpense ? status : 'pendente'
+        status: index === firstExpense ? status : 'pendente',
+        id_bank
       };
 
       const expense = await this.gateway.createExpenses(data);
@@ -83,7 +105,8 @@ export class CreateExpensesInteractor {
         amount: expense.amount,
         description: expense.description,
         reference_month: expense.reference_month,
-        status: expense.status
+        status: expense.status,
+        id_bank: expense.id_bank
       });
     }
 
@@ -93,7 +116,7 @@ export class CreateExpensesInteractor {
   private async createSingleExpense(
     input: InputCreateExpenses
   ): Promise<ExpenseOutput[]> {
-    const { amount, description, id_user, status } = input;
+    const { amount, description, id_user, status, id_bank } = input;
 
     const criteria: FindExpensesCriteria = {
       id_user,
@@ -114,7 +137,8 @@ export class CreateExpensesInteractor {
       description,
       id_user,
       reference_month: this.formatMonthYear(new Date()),
-      status
+      status,
+      id_bank
     };
 
     const expense = await this.gateway.createExpenses(data);

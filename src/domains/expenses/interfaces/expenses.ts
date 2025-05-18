@@ -11,6 +11,7 @@ export type FindExpensesCriteria = {
   amount?: number;
   reference_month?: string;
   id_user?: number;
+  id_bank?: number;
   created_at?: Date;
   updated_at?: Date;
   deleted_at?: Date;
@@ -29,9 +30,14 @@ export type ExpenseOutput = {
   status: string;
 };
 
+export enum ExpenseStatus {
+  PAID = 'Pago',
+  PENDING = 'Pendente'
+}
+
 export interface IExpenseRepository {
   create(data: CreateExpensesCriteria): Promise<ExpenseEntity>;
-  find(criteria: FindExpensesCriteria): Promise<ExpenseEntity | null>;
+  find(criteria: FindExpensesCriteria): Promise<ExpenseEntity | undefined>;
   findAll(criteria: FindExpensesCriteria): Promise<ExpenseEntity[] | null>;
   delete(criteria: DeleteExpenseData): Promise<boolean>;
   update(criteria: UpdateExpenseData): Promise<boolean>;

@@ -62,6 +62,7 @@ export class ExpenseRepository implements IExpenseRepository {
       description: expense.description,
       reference_month: expense.reference_month,
       id_user: expense.id_user,
+      id_bank: expense.id_bank,
       status: expense.status,
       created_at: expense.created_at,
       updated_at: expense.updated_at,
@@ -71,13 +72,13 @@ export class ExpenseRepository implements IExpenseRepository {
 
   public async find(
     criteria: FindExpensesCriteria
-  ): Promise<ExpenseEntity | null> {
+  ): Promise<ExpenseEntity | undefined> {
     const expense = await this.model.findOne({
       where: this.getConditions(criteria),
       raw: true
     });
 
-    if (!expense) return null;
+    if (!expense) return undefined;
 
     return new ExpenseEntity(expense);
   }
@@ -99,7 +100,8 @@ export class ExpenseRepository implements IExpenseRepository {
           description: expense.description,
           reference_month: expense.reference_month,
           status: expense.status,
-          id_user: expense.id_user
+          id_user: expense.id_user,
+          id_bank: expense.id_bank
         })
     );
   }

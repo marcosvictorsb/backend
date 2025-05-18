@@ -1,3 +1,4 @@
+import { IBankRepository } from '../../../domains/bank/interfaces';
 import { DataLogOutput } from '../../../adapters/services';
 import logger from '../../../config/logger';
 import { ExpenseEntity } from '../entity/expenses.entity';
@@ -15,6 +16,7 @@ export type GetExpensesData = {
 
 export type GetExpensesGatewayParams = {
   repository: IExpenseRepository;
+  bankRepository: IBankRepository;
   logger: typeof logger;
 };
 

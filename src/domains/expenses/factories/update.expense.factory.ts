@@ -6,11 +6,15 @@ import { UpdateExpenseGatewayParams } from '../interfaces';
 import { UpdateExpenseController } from '../controllers';
 import { Presenter } from '../../../protocols/presenter';
 import { UpdateExpenseGateway } from '../gateways/';
+import { BankRepository } from '../../../domains/bank/repositories/bank.repository';
+import BankModel from '../../../domains/bank/model/bank.model';
 
 const expenseRepository = new ExpenseRepository({ model: ExpenseModel });
+const bankRepository = new BankRepository({ model: BankModel })
 
 const gateway: UpdateExpenseGatewayParams = {
   repository: expenseRepository,
+  bankRepository,
   logger
 };
 

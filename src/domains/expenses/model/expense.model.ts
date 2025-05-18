@@ -1,6 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import mysql from '../../../infra/database/connection/mysql';
 import { UserModel } from '../../users/model/user.model';
+import BankModel from '../../../domains/bank/model/bank.model';
 
 class ExpenseModel extends Model {
   id!: number;
@@ -8,6 +9,7 @@ class ExpenseModel extends Model {
   description!: string;
   reference_month!: string;
   id_user!: number;
+  id_bank!: number;
   status!: string;
   created_at!: Date;
   updated_at!: Date;
@@ -35,6 +37,14 @@ ExpenseModel.init(
       allowNull: false
     },
     id_user: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: UserModel,
+        key: 'id'
+      }
+    },
+    id_bank: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -72,5 +82,5 @@ ExpenseModel.init(
 );
 
 ExpenseModel.belongsTo(UserModel, { foreignKey: 'id_user', as: 'users' });
-
+ExpenseModel.belongsTo(BankModel, { foreignKey: 'id_bank', as: 'banks' });
 export default ExpenseModel;

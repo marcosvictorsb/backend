@@ -16,7 +16,7 @@ export type InputUpdateIncome = {
   description: string;
   id_user: number;
   status: string;
-  id_bank?: number;
+  id_bank: number;
 };
 
 export type UpdateIncomeData = {
@@ -25,7 +25,7 @@ export type UpdateIncomeData = {
   description: string;
   id_user: number;
   status: string;
-  id_bank?: number;
+  id_bank: number;
 };
 
 export type UpdateIncomeGatewayParams = {
