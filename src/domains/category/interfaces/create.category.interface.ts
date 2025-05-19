@@ -9,11 +9,11 @@ export type InputCreateCategory = {
   name: string;
   color: number;
   id_user: number;
-}
+};
 
 export type CreateCategoryControllerParams = {
-  interactor: CreateCategoryInteractor
-}
+  interactor: CreateCategoryInteractor;
+};
 
 export type CreateCategoryGatewayParams = {
   repository: ICategoryRepository;
@@ -22,7 +22,9 @@ export type CreateCategoryGatewayParams = {
 
 export interface ICreateCategoryGateway {
   createCategory(criteria: CreateCategoryCriteria): Promise<CategoryEntity>;
-  findCategory(criteria: FindCategoryCriteria): Promise<CategoryEntity | undefined>;
+  findCategory(
+    criteria: FindCategoryCriteria
+  ): Promise<CategoryEntity | undefined>;
   loggerInfo(message: string, data?: DataLogOutput): void;
   loggerError(message: string, data?: DataLogOutput): void;
 }

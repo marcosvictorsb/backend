@@ -21,8 +21,8 @@ routers.post('/api/webhook/deploy', (request: Request, response: Response) =>
   deploy.handleWebhook(request, response)
 );
 
-const notFound = (request: Request, response: Response) => response.status(404).json({rota: 'Route does not exist'})
+const notFound = (request: Request, response: Response) =>
+  response.status(404).json({ rota: 'Route does not exist' });
 routers.use(notFound);
-
 
 export default routers;

@@ -28,7 +28,7 @@ export class CreateExpensesController implements ICreateExpensesController {
       recurring_count: request.body.recurring_count,
       status: request.body.status,
       id_bank: request.body.id_bank,
-      date_payment: request.body?.date_payment      
+      date_payment: request.body?.date_payment
     };
     const result = await this.interactor.execute(input);
     return response.status(result.status).json(result.body);

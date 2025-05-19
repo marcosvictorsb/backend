@@ -23,7 +23,6 @@ export class DeleteExpenseInteractor {
       }
       await this.gateway.deleteExpense({ id_user, id });
 
-
       if (expense.status === ExpenseStatus.PAID) {
         const bank = await this.gateway.findBank({ id: expense.id_bank });
         if (!bank) {
@@ -37,7 +36,6 @@ export class DeleteExpenseInteractor {
         };
         await this.gateway.updateBank(criteriaUpdate);
       }
-
 
       this.gateway.loggerInfo('Despesa deletada');
       return this.presenter.OK();

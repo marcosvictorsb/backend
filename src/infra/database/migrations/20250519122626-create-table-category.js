@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     await queryInterface.createTable('categories', {
       id: {
         type: Sequelize.INTEGER,
@@ -25,10 +25,10 @@ module.exports = {
         type: Sequelize.STRING,
         defaultValue: '#000000'
       }
-    })
+    });
   },
 
-  async down (queryInterface) {
+  async down(queryInterface) {
     await queryInterface.dropTable('users');
   }
 };

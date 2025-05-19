@@ -13,8 +13,8 @@ export type GetCategoriesData = {
 };
 
 export type GetCategoriesControllerParams = {
-  interactor: GetCategoriesInteractor
-}
+  interactor: GetCategoriesInteractor;
+};
 
 export type GetCategoriesGatewayParams = {
   repository: ICategoryRepository;

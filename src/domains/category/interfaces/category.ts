@@ -16,7 +16,7 @@ export type FindCategoryCriteria = {
 };
 
 export type DeleteCategoryCriteria = {
- id?: number;
+  id?: number;
   name?: string;
   color?: number;
   id_user?: number;

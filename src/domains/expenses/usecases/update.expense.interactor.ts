@@ -1,4 +1,8 @@
-import { ExpenseStatus, IUpdateExpenseGateway, UpdateExpenseData } from '../interfaces/';
+import {
+  ExpenseStatus,
+  IUpdateExpenseGateway,
+  UpdateExpenseData
+} from '../interfaces/';
 import { IPresenter } from '../../../protocols/presenter';
 import { HttpResponse } from '../../../protocols/http';
 import { InputUpdateExpense } from '../interfaces/';
@@ -14,8 +18,16 @@ export class UpdateExpenseInteractor {
       this.gateway.loggerInfo('Atualizando despesa', {
         requestTxt: JSON.stringify(input)
       });
-      const { id, amount, description, id_user, status, id_bank, date_payment } = input;
-      
+      const {
+        id,
+        amount,
+        description,
+        id_user,
+        status,
+        id_bank,
+        date_payment
+      } = input;
+
       const currentExpense = await this.gateway.findExpense({ id });
       if (!currentExpense) {
         this.gateway.loggerInfo('Receita não encontrada', {
@@ -23,7 +35,7 @@ export class UpdateExpenseInteractor {
         });
         return this.presenter.notFound('Receita não encontrada');
       }
-      
+
       const isChangingBank = id_bank && currentExpense.id_bank !== id_bank;
       const oldBank = await this.gateway.findBank({
         id: currentExpense.id_bank
@@ -69,7 +81,9 @@ export class UpdateExpenseInteractor {
         currentExpense.status === ExpenseStatus.PAID &&
         status !== ExpenseStatus.PAID
       ) {
-        const bank = await this.gateway.findBank({ id: currentExpense.id_bank });
+        const bank = await this.gateway.findBank({
+          id: currentExpense.id_bank
+        });
         if (bank) {
           const newBankAmount = bank.amount - currentExpense.amount;
           await this.gateway.updateBank({ id: bank.id, amount: newBankAmount });

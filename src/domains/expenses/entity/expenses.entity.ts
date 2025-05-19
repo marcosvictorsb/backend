@@ -34,7 +34,7 @@ export class ExpenseEntity {
     this.status = params.status;
     this.id_user = params.id_user;
     this.id_bank = params.id_bank;
-    this.date_payment = params?.date_payment;    
+    this.date_payment = params?.date_payment;
     this.created_at = params?.created_at;
     this.updated_at = params?.updated_at;
     this.deleted_at = params?.deleted_at;

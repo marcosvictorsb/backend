@@ -43,7 +43,7 @@ export class CategoryRepository implements ICategoryRepository {
       id: category.id,
       color: category.color,
       name: category.name,
-      id_user: category.id_user,
+      id_user: category.id_user
     });
   }
 
@@ -60,7 +60,9 @@ export class CategoryRepository implements ICategoryRepository {
     return new CategoryEntity(category);
   }
 
-  public async findAll(criteria: FindCategoryCriteria): Promise<CategoryEntity[]> {
+  public async findAll(
+    criteria: FindCategoryCriteria
+  ): Promise<CategoryEntity[]> {
     const categories = await this.model.findAll({
       where: this.getConditions(criteria)
     });

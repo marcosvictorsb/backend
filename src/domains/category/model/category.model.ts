@@ -12,9 +12,9 @@ class CategoryModel extends Model {
 CategoryModel.init(
   {
     id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
     },
     name: {
       type: DataTypes.STRING,
@@ -27,7 +27,7 @@ CategoryModel.init(
       references: {
         model: UserModel,
         key: 'id'
-      },
+      }
     },
     color: {
       type: DataTypes.STRING,

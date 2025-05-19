@@ -10,7 +10,7 @@ import { BankRepository } from '../../../domains/bank/repositories/bank.reposito
 import BankModel from '../../../domains/bank/model/bank.model';
 
 const expenseRepository = new ExpenseRepository({ model: ExpenseModel });
-const bankRepository = new BankRepository({ model: BankModel })
+const bankRepository = new BankRepository({ model: BankModel });
 
 const gateway: GetExpensesGatewayParams = {
   repository: expenseRepository,

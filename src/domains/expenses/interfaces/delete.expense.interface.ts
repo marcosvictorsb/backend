@@ -1,4 +1,8 @@
-import { FindBankCriteria, IBankRepository, UpdateBankData } from '../../../domains/bank/interfaces';
+import {
+  FindBankCriteria,
+  IBankRepository,
+  UpdateBankData
+} from '../../../domains/bank/interfaces';
 import { DataLogOutput } from '../../../adapters/services/logger.service';
 import logger from '../../../config/logger';
 import { ExpenseEntity } from '../entity/expenses.entity';
@@ -28,7 +32,9 @@ export type DeleteExpenseControllerParams = {
 
 export interface IDeleteExpenseGateway {
   deleteExpense(criteria: DeleteExpenseData): Promise<boolean>;
-  findExpense(criteria: FindExpensesCriteria): Promise<ExpenseEntity | undefined>;
+  findExpense(
+    criteria: FindExpensesCriteria
+  ): Promise<ExpenseEntity | undefined>;
   findBank(criteria: FindBankCriteria): Promise<BankEntity | undefined>;
   updateBank(criteria: UpdateBankData): Promise<boolean>;
   loggerInfo(message: string, data?: DataLogOutput): void;

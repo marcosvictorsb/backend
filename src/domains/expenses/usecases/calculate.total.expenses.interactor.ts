@@ -36,13 +36,13 @@ export class CalculateTotalExpensesInteractor {
           'Não tem valor cadatrado, então será necessário retornar o valor 0'
         );
         return this.presenter.OK({ total: 0 });
-      }     
+      }
 
       const total = this.getTotalExpense(expenses);
 
-      return this.presenter.OK({ 
+      return this.presenter.OK({
         total_expense_pay: total.total_expense_pay,
-        total_expense_to_pay: total.total_expense_to_pay 
+        total_expense_to_pay: total.total_expense_to_pay
       });
     } catch (error) {
       this.gateway.loggerError('Erro ao realizar o calculo das despesas', {
@@ -54,16 +54,16 @@ export class CalculateTotalExpensesInteractor {
     }
   }
 
-  private getTotalExpense(expenses: ExpenseEntity[]): { 
-    total_expense_pay: number,
-    total_expense_to_pay: number
-   } {
+  private getTotalExpense(expenses: ExpenseEntity[]): {
+    total_expense_pay: number;
+    total_expense_to_pay: number;
+  } {
     let total_expense_pay: number = 0;
     let total_expense_to_pay: number = 0;
-    for(let i = 0; i <= expenses.length - 1; i++) {
-      if(expenses[i].status === ExpenseStatus.PAID) {
+    for (let i = 0; i <= expenses.length - 1; i++) {
+      if (expenses[i].status === ExpenseStatus.PAID) {
         total_expense_pay += expenses[i].amount;
-        continue
+        continue;
       }
       total_expense_to_pay += expenses[i].amount;
     }
@@ -71,7 +71,7 @@ export class CalculateTotalExpensesInteractor {
     return {
       total_expense_pay,
       total_expense_to_pay
-    }
+    };
   }
 
   private formatMonthYear(date: Date): string {

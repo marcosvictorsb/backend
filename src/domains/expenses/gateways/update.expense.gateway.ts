@@ -7,7 +7,10 @@ import {
 } from '../interfaces/';
 import { ExpenseEntity } from '../entity/expenses.entity';
 import { MixUpdateExpenseService } from '../../../adapters/gateways/';
-import { FindBankCriteria, IBankRepository } from '../../../domains/bank/interfaces';
+import {
+  FindBankCriteria,
+  IBankRepository
+} from '../../../domains/bank/interfaces';
 import { UpdateBankData } from '../../../domains/bank/interfaces';
 import { BankEntity } from '../../../domains/bank/entities/bank.entity';
 
@@ -25,10 +28,10 @@ export class UpdateExpenseGateway
   }
 
   async findExpense(
-      criteria: FindExpensesCriteria
-    ): Promise<ExpenseEntity | undefined> {
-      return await this.expenseRepository.find(criteria);
-    }
+    criteria: FindExpensesCriteria
+  ): Promise<ExpenseEntity | undefined> {
+    return await this.expenseRepository.find(criteria);
+  }
 
   async updateExpense(criteria: UpdateExpenseData): Promise<boolean> {
     return await this.expenseRepository.update(criteria);

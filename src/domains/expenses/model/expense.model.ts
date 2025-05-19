@@ -57,10 +57,10 @@ ExpenseModel.init(
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: 'pendente'
-    },    
+    },
     date_payment: {
       allowNull: true,
-      type: DataTypes.DATE,
+      type: DataTypes.DATE
     },
     created_at: {
       allowNull: false,

@@ -17,4 +17,6 @@ const gateway: CreateCategoryGatewayParams = {
 const CategoryGateway = new CreateCategoryGateway(gateway);
 const presenter = new Presenter();
 const interactor = new CreateCategoryInteractor(CategoryGateway, presenter);
-export const createCategoryController = new CreateCategoryController({ interactor });
+export const createCategoryController = new CreateCategoryController({
+  interactor
+});
