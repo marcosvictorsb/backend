@@ -10,6 +10,7 @@ export type FindExpensesCriteria = {
   description?: string;
   amount?: number;
   reference_month?: string;
+  status?: string;
   id_user?: number;
   id_bank?: number;
   created_at?: Date;
@@ -17,6 +18,9 @@ export type FindExpensesCriteria = {
   deleted_at?: Date;
   createdStart?: string;
   createdEnd?: string;
+  date_payment?: Date;
+  datePaymentStart?: Date;
+  datePaymentEnd?: Date;
 };
 
 export type IExpenseRepositoryDependencies = {
@@ -38,7 +42,7 @@ export enum ExpenseStatus {
 export interface IExpenseRepository {
   create(data: CreateExpensesCriteria): Promise<ExpenseEntity>;
   find(criteria: FindExpensesCriteria): Promise<ExpenseEntity | undefined>;
-  findAll(criteria: FindExpensesCriteria): Promise<ExpenseEntity[] | null>;
+  findAll(criteria: FindExpensesCriteria): Promise<ExpenseEntity[]>;
   delete(criteria: DeleteExpenseData): Promise<boolean>;
   update(criteria: UpdateExpenseData): Promise<boolean>;
 }

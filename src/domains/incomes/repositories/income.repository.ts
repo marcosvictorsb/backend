@@ -6,7 +6,7 @@ import {
   IIncomeRepositoryDependencies,
   UpdateIncomeData
 } from '../interfaces';
-import { ModelStatic } from 'sequelize';
+import { ModelStatic, Op } from 'sequelize';
 import IncomeModel from '../model/income.model';
 import { IncomeEntity } from '../entity/income.entity';
 
@@ -43,6 +43,12 @@ export class IncomeRepository implements IIncomeRepository {
     }
     if (criteria.deleted_at) {
       whereConditions['deleted_at'] = criteria.deleted_at;
+    }
+    if (criteria.dateCreateStart || criteria.dateCreateEnd) {
+      whereConditions['created_at'] = {
+        ...(criteria.dateCreateStart && { [Op.gte]: criteria.dateCreateStart }),
+        ...(criteria.dateCreateEnd && { [Op.lte]: criteria.dateCreateEnd })
+      };
     }
 
     return whereConditions;

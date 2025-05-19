@@ -5,6 +5,7 @@ import expensesRoutes from '../domains/expenses/routes';
 import incomesRoutes from '../domains/incomes/routes';
 import banksRoutes from '../domains/bank/routes';
 import categoriesRoutes from '../domains/category/routes';
+import graphicRoutes from '../domains/graphic/routes';
 import deploy from '../infra/deploy/deploy';
 
 const routers = Router();
@@ -15,6 +16,7 @@ routers.use('/expenses', expensesRoutes);
 routers.use('/incomes', incomesRoutes);
 routers.use('/banks', banksRoutes);
 routers.use('/categories', categoriesRoutes);
+routers.use('/graphic', graphicRoutes);
 
 // Webhook para deploy
 routers.post('/api/webhook/deploy', (request: Request, response: Response) =>

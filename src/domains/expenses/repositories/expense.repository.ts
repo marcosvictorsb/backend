@@ -50,6 +50,17 @@ export class ExpenseRepository implements IExpenseRepository {
         ...(criteria.createdEnd && { [Op.lte]: criteria.createdEnd })
       };
     }
+    if (criteria.date_payment) {
+      whereConditions['date_payment'] = criteria.date_payment;
+    }
+    if (criteria.datePaymentStart || criteria.datePaymentEnd) {
+      whereConditions['date_payment'] = {
+        ...(criteria.datePaymentStart && {
+          [Op.gte]: criteria.datePaymentStart
+        }),
+        ...(criteria.datePaymentEnd && { [Op.lte]: criteria.datePaymentEnd })
+      };
+    }
 
     return whereConditions;
   }
