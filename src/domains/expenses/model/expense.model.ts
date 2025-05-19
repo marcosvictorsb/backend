@@ -59,7 +59,7 @@ ExpenseModel.init(
       defaultValue: 'pendente'
     },    
     date_payment: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.DATE,
     },
     created_at: {

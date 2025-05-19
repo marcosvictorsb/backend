@@ -6,7 +6,7 @@ import {
   FindBankCriteria
 } from '../interfaces/';
 import { BankEntity } from '../entities/bank.entity';
-import { MixGetBanksService } from '../../../adapters/gateways/get.banks.gateway';
+import { MixGetBanksService } from '../../../adapters/gateways/banks/get.banks.gateway';
 
 export class GetBanksGateway
   extends MixGetBanksService

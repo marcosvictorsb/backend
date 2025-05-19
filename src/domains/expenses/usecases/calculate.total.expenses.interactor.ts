@@ -1,11 +1,13 @@
 import {
   CalculateTotalExpensesData,
+  ExpenseStatus,
   FindExpensesCriteria,
   ICalculateTotalExpensesGateway
 } from '../interfaces/';
 import { IPresenter } from '../../../protocols/presenter';
 import { HttpResponse } from '../../../protocols/http';
 import { InputCalculateTotalExpenses } from '../interfaces/';
+import { ExpenseEntity } from '../entity/expenses.entity';
 
 export class CalculateTotalExpensesInteractor {
   constructor(
@@ -34,11 +36,14 @@ export class CalculateTotalExpensesInteractor {
           'Não tem valor cadatrado, então será necessário retornar o valor 0'
         );
         return this.presenter.OK({ total: 0 });
-      }
+      }     
 
-      const total = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+      const total = this.getTotalExpense(expenses);
 
-      return this.presenter.OK({ total_expense: total });
+      return this.presenter.OK({ 
+        total_expense_pay: total.total_expense_pay,
+        total_expense_to_pay: total.total_expense_to_pay 
+      });
     } catch (error) {
       this.gateway.loggerError('Erro ao realizar o calculo das despesas', {
         error
@@ -46,6 +51,26 @@ export class CalculateTotalExpensesInteractor {
       return this.presenter.serverError(
         'Erro ao realizar o calculo das despesas'
       );
+    }
+  }
+
+  private getTotalExpense(expenses: ExpenseEntity[]): { 
+    total_expense_pay: number,
+    total_expense_to_pay: number
+   } {
+    let total_expense_pay: number = 0;
+    let total_expense_to_pay: number = 0;
+    for(let i = 0; i <= expenses.length - 1; i++) {
+      if(expenses[i].status === ExpenseStatus.PAID) {
+        total_expense_pay += expenses[i].amount;
+        continue
+      }
+      total_expense_to_pay += expenses[i].amount;
+    }
+
+    return {
+      total_expense_pay,
+      total_expense_to_pay
     }
   }
 
