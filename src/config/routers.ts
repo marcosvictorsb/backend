@@ -10,13 +10,13 @@ import deploy from '../infra/deploy/deploy';
 
 const routers = Router();
 
-routers.use('/auth', authenticationRoutes);
-routers.use('/users', userRoutes);
-routers.use('/expenses', expensesRoutes);
-routers.use('/incomes', incomesRoutes);
-routers.use('/banks', banksRoutes);
-routers.use('/categories', categoriesRoutes);
-routers.use('/graphic', graphicRoutes);
+routers.use('/api/auth', authenticationRoutes);
+routers.use('/api/users', userRoutes);
+routers.use('/api/expenses', expensesRoutes);
+routers.use('/api/incomes', incomesRoutes);
+routers.use('/api/banks', banksRoutes);
+routers.use('/api/categories', categoriesRoutes);
+routers.use('/api/graphic', graphicRoutes);
 
 // Webhook para deploy
 routers.post('/api/webhook/deploy', (request: Request, response: Response) =>

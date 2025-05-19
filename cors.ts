@@ -20,25 +20,21 @@ const corsMiddleware = (
   const origin = request.header('origin') || request.header('Origin');
 
   if (origin && whitelist().some((domain) => domain.test(origin))) {
-    response.set('Access-Control-Allow-Origin', origin);
-  }
+    response.set({
+      'Access-Control-Allow-Origin': origin,
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, PATCH, DELETE',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+      'Access-Control-Allow-Credentials': 'true',
+    })
 
-  response.set(
-    'Access-Control-Allow-Methods',
-    'GET, POST, OPTIONS, PUT, PATCH, DELETE'
-  );
-  response.set(
-    'Access-Control-Allow-Headers',
-    'Content-Type, Accept, Accept-Encoding, Accept-Language, X-Access-Token, X-Key, Authorization, X-request-Id, Prefer, X-Logged-Area'
-  );
+    // Responde a requisições OPTIONS com 204
+    if (request.method === 'OPTIONS') {
+      response.sendStatus(204);
+      return;
+    }
 
-  // Responde a requisições OPTIONS com 204
-  if (request.method === 'OPTIONS') {
-    response.sendStatus(204);
-    return;
-  }
-
-  next();
-};
+    next();
+  };
+}
 
 export default corsMiddleware;
