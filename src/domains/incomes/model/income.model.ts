@@ -58,7 +58,7 @@ IncomeModel.init(
     },
     created_at: {
       allowNull: false,
-      type: DataTypes.DATEONLY,
+      type: DataTypes.DATE,
       defaultValue: DataTypes.NOW
     },
     updated_at: {

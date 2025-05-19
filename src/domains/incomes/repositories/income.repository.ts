@@ -91,15 +91,16 @@ export class IncomeRepository implements IIncomeRepository {
     if (!income.length) return [];
 
     return income.map(
-      (Income: IncomeEntity) =>
+      (income: IncomeEntity) =>
         new IncomeEntity({
-          id: Income.id,
-          amount: Income.amount,
-          description: Income.description,
-          reference_month: Income.reference_month,
-          status: Income.status,
-          id_user: Income.id_user,
-          id_bank: Income.id_bank
+          id: income.id,
+          amount: income.amount,
+          description: income.description,
+          reference_month: income.reference_month,
+          status: income.status,
+          id_user: income.id_user,
+          id_bank: income.id_bank,
+          created_at: income.created_at
         })
     );
   }
