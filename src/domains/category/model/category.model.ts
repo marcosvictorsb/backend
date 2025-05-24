@@ -6,7 +6,7 @@ class CategoryModel extends Model {
   id!: number;
   name!: string;
   id_user!: number;
-  color!: string;
+  icon!: string;
 }
 
 CategoryModel.init(
@@ -29,9 +29,9 @@ CategoryModel.init(
         key: 'id'
       }
     },
-    color: {
+    icon: {
       type: DataTypes.STRING,
-      defaultValue: '#000000'
+      defaultValue: ''
     }
   },
   {

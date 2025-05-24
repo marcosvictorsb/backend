@@ -30,8 +30,8 @@ export class CategoryRepository implements ICategoryRepository {
       whereConditions['id_user'] = criteria.id_user;
     }
 
-    if (criteria.color) {
-      whereConditions['amount'] = criteria.color;
+    if (criteria.icon) {
+      whereConditions['icon'] = criteria.icon;
     }
 
     return whereConditions;
@@ -41,7 +41,7 @@ export class CategoryRepository implements ICategoryRepository {
     const category = await this.model.create(data);
     return new CategoryEntity({
       id: category.id,
-      color: category.color,
+      icon: category.icon,
       name: category.name,
       id_user: category.id_user
     });
@@ -73,7 +73,7 @@ export class CategoryRepository implements ICategoryRepository {
       (category: CategoryEntity) =>
         new CategoryEntity({
           id: category.id,
-          color: category.color,
+          icon: category.icon,
           name: category.name,
           id_user: category.id_user
         })

@@ -13,7 +13,7 @@ export class CreateCategoryInteractor {
       this.gateway.loggerInfo('Iniciou a requisição para criar despesa', {
         data: JSON.stringify(input)
       });
-      const { name, id_user, color } = input;
+      const { name, id_user, icon } = input;
       const category = await this.gateway.findCategory({
         name,
         id_user
@@ -27,7 +27,7 @@ export class CreateCategoryInteractor {
       const categoryCreated = await this.gateway.createCategory({
         name,
         id_user,
-        color
+        icon
       });
       this.gateway.loggerInfo('Categoria criada', {
         data: JSON.stringify(categoryCreated)

@@ -21,9 +21,9 @@ module.exports = {
           key: 'id'
         }
       },
-      color: {
+      icon: {
         type: Sequelize.STRING,
-        defaultValue: '#000000'
+        defaultValue: ''
       }
     });
   },

@@ -7,7 +7,7 @@ import { ICategoryRepository } from './category';
 
 export type InputCreateCategory = {
   name: string;
-  color: number;
+  icon: number;
   id_user: number;
 };
 

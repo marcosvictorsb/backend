@@ -4,28 +4,28 @@ import CategoryModel from '../model/category.model';
 
 export type CreateCategoryCriteria = {
   name: string;
-  color: number;
+  icon: number;
   id_user: number;
 };
 
 export type FindCategoryCriteria = {
   id?: number;
   name?: string;
-  color?: number;
+  icon?: number;
   id_user?: number;
 };
 
 export type DeleteCategoryCriteria = {
   id?: number;
   name?: string;
-  color?: number;
+  icon?: number;
   id_user?: number;
 };
 
 export type UpdateCategoryCriteria = {
   id?: number;
   name?: string;
-  color?: number;
+  icon?: number;
   id_user?: number;
 };
 
