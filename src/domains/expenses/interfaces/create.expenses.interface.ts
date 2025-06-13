@@ -18,7 +18,7 @@ export type InputCreateExpenses = {
   is_recurring?: boolean;
   recurring_count?: number;
   id_bank: number;
-  date_payment?: Date;
+  date_payment: Date;
 };
 
 export type CreateExpensesCriteria = {
@@ -28,6 +28,7 @@ export type CreateExpensesCriteria = {
   id_bank: number;
   reference_month: string;
   status: string;
+  date_payment?: Date;
 };
 
 export type CreateExpensesGatewayParams = {

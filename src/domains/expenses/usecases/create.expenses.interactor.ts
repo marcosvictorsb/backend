@@ -2,14 +2,10 @@ import {
   ExpenseOutput,
   ExpenseStatus,
   FindExpensesCriteria,
-  ICreateExpensesGateway
+  ICreateExpensesGateway,
+  InputCreateExpenses
 } from '../interfaces';
 import { IPresenter, HttpResponse } from '../../../protocols';
-import { InputCreateExpenses } from '../interfaces';
-import {
-  FindBankCriteria,
-  UpdateBankData
-} from '../../../domains/bank/interfaces';
 
 export class CreateExpensesInteractor {
   constructor(
@@ -17,63 +13,118 @@ export class CreateExpensesInteractor {
     private presenter: IPresenter
   ) {}
 
-  async execute(input: InputCreateExpenses): Promise<HttpResponse> {
+  async execute(inputs: InputCreateExpenses[]): Promise<HttpResponse> {
     try {
-      this.gateway.loggerInfo('Criando registros de despesas', {
-        requestTxt: JSON.stringify(input)
+      this.gateway.loggerInfo('Criando registros de despesas em lote', {
+        count: inputs.length,
+        requestTxt: JSON.stringify(inputs)
       });
-      const { is_recurring, id_bank, amount, status } = input;
 
-      const expenses = is_recurring
-        ? await this.createRecurringExpenses(input)
-        : await this.createSingleExpense(input);
+      const results = await this.processExpenses(inputs);
 
-      if (!expenses.length) {
-        this.gateway.loggerInfo('Registro de despesa não criado', {
-          requestTxt: JSON.stringify(input)
+      if (results.createdCount === 0) {
+        this.gateway.loggerInfo('Nenhuma despesa foi criada', {
+          existingCount: results.existingCount
         });
         return this.presenter.conflict(
-          'Registros de despesa já cadastrado anteriormente'
+          'Nenhuma despesa foi criada (todas já existiam)'
         );
       }
 
-      const bankCriteria: FindBankCriteria = {
-        id: id_bank
-      };
+      await this.updateBanksForPaidExpenses(results.createdExpenses);
 
-      if (status === ExpenseStatus.PAID) {
-        const bank = await this.gateway.findBank(bankCriteria);
-        if (!bank) {
-          this.gateway.loggerInfo('Banco não encontrado', {
-            requestTxt: JSON.stringify(bank)
-          });
-          return this.presenter.notFound('Banco não encontrado');
-        }
-        const updatedAmount = bank.amount - Number(amount);
-        const criteriaUpdate: UpdateBankData = {
-          amount: updatedAmount,
-          id: bank.id
-        };
-        await this.gateway.updateBank(criteriaUpdate);
+      this.gateway.loggerInfo('Despesas criadas com sucesso', {
+        createdCount: results.createdCount,
+        existing: results.existingCount
+      });
+
+      return this.presenter.created({
+        created: results.createdCount,
+        existing: results.existingCount,
+        expenses: results.createdExpenses
+      });
+    } catch (error) {
+      this.gateway.loggerError('Erro ao criar despesas em lote', { error });
+      return this.presenter.serverError('Erro ao criar despesas em lote');
+    }
+  }
+
+  private async processExpenses(inputs: InputCreateExpenses[]): Promise<{
+    createdExpenses: ExpenseOutput[];
+    createdCount: number;
+    existingCount: number;
+  }> {
+    const createdExpenses: ExpenseOutput[] = [];
+    let existingCount = 0;
+
+    for (const input of inputs) {
+      const expenses = input.is_recurring
+        ? await this.createRecurringExpenses(input)
+        : await this.createSingleExpense(input);
+
+      if (expenses.length === 0) {
+        existingCount++;
+        continue;
       }
 
-      this.gateway.loggerInfo('Registros de despesas criados com sucesso', {
-        requestTxt: JSON.stringify(expenses)
+      createdExpenses.push(...expenses);
+    }
+
+    return {
+      createdExpenses,
+      createdCount: createdExpenses.length,
+      existingCount
+    };
+  }
+
+  private async updateBanksForPaidExpenses(
+    expenses: ExpenseOutput[]
+  ): Promise<void> {
+    const paidExpenses = expenses.filter(
+      (e) => e.status.toLowerCase() === ExpenseStatus.PAID.toLowerCase()
+    );
+    const bankUpdates: Record<number, number> = {};
+
+    // Agrupar atualizações por banco
+    for (const expense of paidExpenses) {
+      if (!expense.id_bank) continue;
+
+      bankUpdates[expense.id_bank] =
+        (bankUpdates[expense.id_bank] || 0) - Number(expense.amount);
+    }
+
+    // Processar atualizações em lote
+    for (const [bankId, amountChange] of Object.entries(bankUpdates)) {
+      const bank = await this.gateway.findBank({ id: Number(bankId) });
+      if (!bank) continue;
+
+      await this.gateway.updateBank({
+        id: bank.id,
+        amount: bank.amount + amountChange
       });
-      return this.presenter.created(expenses);
-    } catch (error) {
-      this.gateway.loggerError('Erro ao criar despesas', { error });
-      return this.presenter.serverError('Erro ao criar despesas');
+      this.gateway.loggerInfo(
+        `Banco: ${bank.name}, valor: ${(bank.amount / 100).toFixed(
+          2
+        )} atualizado para: ${(bank.amount + amountChange).toFixed(2)}`
+      );
     }
   }
 
   private async createRecurringExpenses(
     input: InputCreateExpenses
   ): Promise<ExpenseOutput[]> {
-    const { amount, description, id_user, recurring_count, status, id_bank } =
-      input;
+    this.gateway.loggerInfo('Criando despensa recorrente');
+    const {
+      amount,
+      description,
+      id_user,
+      recurring_count,
+      status,
+      id_bank,
+      date_payment
+    } = input;
     const reference_month = new Date();
-    const expenses = [];
+    const expenses: ExpenseOutput[] = [];
     const firstExpense = 0;
 
     for (let index = 0; index < (recurring_count ?? 0); index++) {
@@ -86,32 +137,32 @@ export class CreateExpensesInteractor {
         amount,
         description
       };
-      const expenseExists = await this.gateway.findExpenses(criteria);
-      if (expenseExists) {
-        this.gateway.loggerInfo('Registro de despesa já existe', {
-          requestTxt: JSON.stringify(expenseExists)
+
+      if (await this.gateway.findExpenses(criteria)) {
+        this.gateway.loggerInfo('Despesa recorrente já existe', {
+          requestTxt: JSON.stringify(criteria)
         });
         continue;
       }
 
-      const data = {
+      const expense = await this.gateway.createExpenses({
         amount,
         description,
         id_user,
-        is_recurring: true,
         reference_month: this.formatMonthYear(month),
         status: index === firstExpense ? status : 'pendente',
-        id_bank
-      };
-
-      const expense = await this.gateway.createExpenses(data);
-      expenses.push({
-        amount: expense.amount,
-        description: expense.description,
-        reference_month: expense.reference_month,
-        status: expense.status,
-        id_bank: expense.id_bank
+        id_bank,
+        date_payment:
+          status.toLowerCase() === ExpenseStatus.PAID.toLowerCase()
+            ? date_payment
+            : undefined
       });
+
+      this.gateway.loggerInfo('Despesa criada: ', {
+        expense: JSON.stringify(expense)
+      });
+
+      expenses.push(this.mapExpenseOutput(expense));
     }
 
     return expenses;
@@ -120,42 +171,38 @@ export class CreateExpensesInteractor {
   private async createSingleExpense(
     input: InputCreateExpenses
   ): Promise<ExpenseOutput[]> {
+    this.gateway.loggerInfo('Não é um despesa recorrente');
     const { amount, description, id_user, status, id_bank, date_payment } =
       input;
 
-    const criteria: FindExpensesCriteria = {
-      id_user,
-      reference_month: this.formatMonthYear(new Date()),
-      amount,
-      description
-    };
-    const expenseExists = await this.gateway.findExpenses(criteria);
-    if (expenseExists) {
-      this.gateway.loggerInfo('Registro de despesa já existe', {
-        requestTxt: JSON.stringify(expenseExists)
-      });
-      return [];
-    }
-
-    const data = {
+    const expense = await this.gateway.createExpenses({
       amount,
       description,
       id_user,
       reference_month: this.formatMonthYear(new Date()),
       status,
       id_bank,
-      date_payment: status === ExpenseStatus.PAID ? date_payment : null
-    };
+      date_payment:
+        status.toLowerCase() === ExpenseStatus.PAID.toLowerCase()
+          ? date_payment
+          : undefined
+    });
+    this.gateway.loggerInfo('Despesa criada: ', {
+      expense: JSON.stringify(expense)
+    });
 
-    const expense = await this.gateway.createExpenses(data);
-    return [
-      {
-        amount: expense.amount,
-        description: expense.description,
-        reference_month: expense.reference_month,
-        status: expense.status
-      }
-    ];
+    return [this.mapExpenseOutput(expense)];
+  }
+
+  private mapExpenseOutput(expense: any): ExpenseOutput {
+    return {
+      amount: expense.amount,
+      description: expense.description,
+      reference_month: expense.reference_month,
+      status: expense.status,
+      id_bank: expense.id_bank,
+      date_payment: expense.date_payment
+    };
   }
 
   private formatMonthYear(date: Date): string {

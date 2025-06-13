@@ -20,17 +20,19 @@ export class CreateExpensesController implements ICreateExpensesController {
     request: Request,
     response: Response
   ): Promise<Response> {
-    const input: InputCreateExpenses = {
-      id_user: Number(request.user?.id),
-      description: request.body.description,
-      amount: request.body.amount * 100,
-      is_recurring: request.body.is_recurring ?? false,
-      recurring_count: request.body.recurring_count,
-      status: request.body.status,
-      id_bank: request.body.id_bank,
-      date_payment: request.body?.date_payment
-    };
-    const result = await this.interactor.execute(input);
+    const userId = Number(request.user?.id);
+    const inputs: InputCreateExpenses[] = request.body.map((expense: any) => ({
+      id_user: userId,
+      description: expense.description,
+      amount: expense.amount,
+      is_recurring: expense.is_recurring ?? false,
+      recurring_count: expense.recurring_count ?? 0,
+      status: expense.status || 'pending',
+      id_bank: expense.id_bank,
+      date_payment: expense.date_payment
+    }));
+
+    const result = await this.interactor.execute(inputs);
     return response.status(result.status).json(result.body);
   }
 }

@@ -22,20 +22,20 @@ export class DeleteExpenseInteractor {
         return this.presenter.notFound('Despesa não encontrada');
       }
       await this.gateway.deleteExpense({ id_user, id });
-
-      if (expense.status === ExpenseStatus.PAID) {
-        const bank = await this.gateway.findBank({ id: expense.id_bank });
-        if (!bank) {
-          this.gateway.loggerInfo('Banco não encontrado');
-          return this.presenter.notFound('Banco não encontrado');
-        }
-        const newAmount = bank.amount + Number(expense.amount);
-        const criteriaUpdate: UpdateBankData = {
-          amount: newAmount,
-          id: bank.id
-        };
-        await this.gateway.updateBank(criteriaUpdate);
+      
+      const isExpense =
+        expense.status.toLowerCase() === ExpenseStatus.PAID.toLowerCase();
+      const bank = await this.gateway.findBank({ id: expense.id_bank });
+      if (!bank) {
+        this.gateway.loggerInfo('Banco não encontrado');
+        return this.presenter.notFound('Banco não encontrado');
       }
+      const newAmount = bank.amount + Number(expense.amount);
+      const criteriaUpdate: UpdateBankData = {
+        amount: newAmount,
+        id: bank.id
+      };
+      await this.gateway.updateBank(criteriaUpdate);
 
       this.gateway.loggerInfo('Despesa deletada');
       return this.presenter.OK();

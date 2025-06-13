@@ -12,6 +12,7 @@ export const authMiddleware = (
   next: NextFunction
 ) => {
   try {
+
     const authHeader = request.header('authorization');
     if (!authHeader) {
       return response.status(401).json({ error: 'Nenhum token informado' });

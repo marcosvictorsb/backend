@@ -16,6 +16,12 @@ export type DataLogOutput = {
   id_income?: number;
 
   id_bank?: number;
+  count?: number;
+  existingCount?: number;
+  createdCount?: number;
+  existing?: number;
+
+  expense?: string;
 };
 
 export interface ILoggerMixin {

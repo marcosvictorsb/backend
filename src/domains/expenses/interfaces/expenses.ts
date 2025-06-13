@@ -32,6 +32,8 @@ export type ExpenseOutput = {
   description: string;
   reference_month: string;
   status: string;
+  id_bank: number;
+  date_payment: Date;
 };
 
 export enum ExpenseStatus {

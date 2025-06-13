@@ -22,7 +22,7 @@ export class CreateCategoryController implements ICreateCategoryController {
   ): Promise<Response> {
     const input: InputCreateCategory = {
       name: request.body.name,
-      color: request.body.color,
+      icon: request.body.icon,
       id_user: Number(request?.user?.id)
     };
     const result = await this.interactor.execute(input);

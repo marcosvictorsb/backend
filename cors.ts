@@ -23,9 +23,10 @@ const corsMiddleware = (
     response.set({
       'Access-Control-Allow-Origin': origin,
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, PATCH, DELETE',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
-      'Access-Control-Allow-Credentials': 'true',
-    })
+      'Access-Control-Allow-Headers':
+        'Content-Type, Authorization, X-Requested-With',
+      'Access-Control-Allow-Credentials': 'true'
+    });
 
     // Responde a requisições OPTIONS com 204
     if (request.method === 'OPTIONS') {
@@ -34,7 +35,7 @@ const corsMiddleware = (
     }
 
     next();
-  };
-}
+  }
+};
 
 export default corsMiddleware;
