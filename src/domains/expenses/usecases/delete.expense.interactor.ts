@@ -21,10 +21,16 @@ export class DeleteExpenseInteractor {
         });
         return this.presenter.notFound('Despesa não encontrada');
       }
+
       await this.gateway.deleteExpense({ id_user, id });
-      
-      const isExpense =
-        expense.status.toLowerCase() === ExpenseStatus.PAID.toLowerCase();
+      const isPending =
+        expense.status.toLowerCase() === ExpenseStatus.PENDING.toLowerCase();
+      if (expense.status === ExpenseStatus.PENDING) {
+        this.gateway.loggerInfo(
+          'A despensa está depedente, não precisa atualizar o banco'
+        );
+        return this.presenter.OK();
+      }
       const bank = await this.gateway.findBank({ id: expense.id_bank });
       if (!bank) {
         this.gateway.loggerInfo('Banco não encontrado');
