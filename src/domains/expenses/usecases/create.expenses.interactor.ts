@@ -146,7 +146,7 @@ export class CreateExpensesInteractor {
       }
 
       const expense = await this.gateway.createExpenses({
-        amount,
+        amount: amount * 100,
         description,
         id_user,
         reference_month: this.formatMonthYear(month),
@@ -176,7 +176,7 @@ export class CreateExpensesInteractor {
       input;
 
     const expense = await this.gateway.createExpenses({
-      amount,
+      amount: amount * 100,
       description,
       id_user,
       reference_month: this.formatMonthYear(new Date()),

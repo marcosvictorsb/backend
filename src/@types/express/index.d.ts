@@ -1,9 +1,10 @@
-import { UserPayload } from '../../middlewares/auth';
-declare global {
-  namespace Express {
-    interface Request {
-      user?: UserPayload;
-      uuid?: string;
-    }
+// src/types/express/index.d.ts
+import { Request } from 'express';
+
+declare module 'express' {
+  interface Request {
+    user?: {
+      id: number;
+    };
   }
 }

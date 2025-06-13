@@ -7,12 +7,11 @@ export interface UserPayload extends JwtPayload {
 }
 
 export const authMiddleware = (
-  request: Request,
+  request: Request, // Use Request padrão aqui
   response: Response,
   next: NextFunction
 ) => {
   try {
-
     const authHeader = request.header('authorization');
     if (!authHeader) {
       return response.status(401).json({ error: 'Nenhum token informado' });
@@ -41,7 +40,8 @@ export const authMiddleware = (
       return response.status(401).json({ error: 'Invalido token payload' });
     }
 
-    request.user = decoded;
+    // A propriedade user está disponível devido à declaração global
+    request.user = { id: decoded.id };
 
     return next();
   } catch (error: any) {
