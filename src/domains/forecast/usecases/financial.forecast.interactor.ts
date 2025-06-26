@@ -122,7 +122,9 @@ export class FinancialForecastInteractor {
 
     transactions.forEach((transaction) => {
       const transactionDate =
-        type === 'expense' ? transaction.date_payment : transaction.created_at;
+        type === 'expense'
+          ? transaction.date_payment
+          : transaction.date_received;
       if (!transactionDate) return;
 
       const date = new Date(transactionDate);

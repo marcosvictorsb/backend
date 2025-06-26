@@ -35,6 +35,9 @@ export class IncomeRepository implements IIncomeRepository {
     if (criteria.id_user) {
       whereConditions['id_user'] = criteria.id_user;
     }
+    if (criteria.date_received) {
+      whereConditions['date_received'] = criteria.date_received;
+    }
     if (criteria.created_at) {
       whereConditions['created_at'] = criteria.created_at;
     }
@@ -64,6 +67,7 @@ export class IncomeRepository implements IIncomeRepository {
       id_user: income.id_user,
       id_bank: income.id_bank,
       status: income.status,
+      date_received: income.date_received,
       created_at: income.created_at,
       updated_at: income.updated_at,
       deleted_at: income.deleted_at
@@ -98,6 +102,7 @@ export class IncomeRepository implements IIncomeRepository {
           description: income.description,
           reference_month: income.reference_month,
           status: income.status,
+          date_received: income.date_received,
           id_user: income.id_user,
           id_bank: income.id_bank,
           created_at: income.created_at

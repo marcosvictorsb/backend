@@ -11,6 +11,7 @@ class IncomeModel extends Model {
   id_user!: number;
   id_bank!: number;
   status!: string;
+  date_received!: Date;
   created_at!: Date;
   updated_at!: Date;
   deleted_at!: Date;
@@ -55,6 +56,10 @@ IncomeModel.init(
         model: BankModel,
         key: 'id'
       }
+    },
+    date_received: {
+      allowNull: true,
+      type: DataTypes.DATE
     },
     created_at: {
       allowNull: false,

@@ -7,6 +7,7 @@ export class IncomeEntity {
   public readonly status: string;
   public readonly id_user: number;
   public readonly id_bank: number;
+  public readonly date_received?: Date;
   public readonly created_at?: Date;
   public readonly updated_at?: Date;
   public readonly deleted_at?: Date;
@@ -20,6 +21,7 @@ export class IncomeEntity {
     status: string;
     id_user: number;
     id_bank: number;
+    date_received?: Date;
     created_at?: Date;
     updated_at?: Date;
     deleted_at?: Date;
@@ -32,6 +34,7 @@ export class IncomeEntity {
     this.status = params.status;
     this.id_user = params.id_user;
     this.id_bank = params.id_bank;
+    this.date_received = params?.date_received;
     this.created_at = params?.created_at;
     this.updated_at = params?.updated_at;
     this.deleted_at = params?.deleted_at;

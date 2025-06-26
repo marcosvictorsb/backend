@@ -13,6 +13,7 @@ export type FindIncomesCriteria = {
   status?: string;
   id_user?: number;
   id_bank?: number;
+  date_received?: Date;
   created_at?: Date;
   updated_at?: Date;
   deleted_at?: Date;
