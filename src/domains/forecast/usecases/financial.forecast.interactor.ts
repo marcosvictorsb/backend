@@ -121,7 +121,8 @@ export class FinancialForecastInteractor {
     const transactionsByDay = new Map<string, (IncomeDTO | ExpenseDTO)[]>();
 
     transactions.forEach((transaction) => {
-      const transactionDate = transaction.date_payment;
+      const transactionDate =
+        type === 'expense' ? transaction.date_payment : transaction.created_at;
       if (!transactionDate) return;
 
       const date = new Date(transactionDate);
