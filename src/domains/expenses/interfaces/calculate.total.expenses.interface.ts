@@ -6,6 +6,7 @@ import { FindExpensesCriteria, IExpenseRepository } from './expenses';
 
 export type InputCalculateTotalExpenses = {
   id_user?: number;
+  reference_month: string;
 };
 
 export type CalculateTotalExpensesData = {

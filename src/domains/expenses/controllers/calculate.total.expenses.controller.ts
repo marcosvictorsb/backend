@@ -26,7 +26,8 @@ export class CalculateTotalExpensesController
     response: Response
   ): Promise<Response> {
     const input: InputCalculateTotalExpenses = {
-      id_user: Number(request.user?.id)
+      id_user: Number(request.user?.id),
+      reference_month: request.query.reference_month as string
     };
     const result = await this.interactor.execute(input);
     return response.status(result.status).json(result.body);

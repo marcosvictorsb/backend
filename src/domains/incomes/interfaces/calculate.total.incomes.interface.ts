@@ -6,6 +6,7 @@ import { IIncomeRepository } from './incomes';
 
 export type InputCalculateTotalIncomes = {
   id_user: number;
+  reference_month: string;
 };
 
 export type CalculateTotalIncomesData = {

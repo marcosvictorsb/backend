@@ -23,11 +23,11 @@ export class CalculateTotalExpensesInteractor {
           input: JSON.stringify(input)
         }
       );
-      const { id_user } = input;
+      const { id_user, reference_month } = input;
 
       const criteria: FindExpensesCriteria = {
         id_user,
-        reference_month: this.formatMonthYear(new Date())
+        reference_month
       };
 
       const expenses = await this.gateway.findExpenses(criteria);
@@ -72,11 +72,5 @@ export class CalculateTotalExpensesInteractor {
       total_expense_pay,
       total_expense_to_pay
     };
-  }
-
-  private formatMonthYear(date: Date): string {
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${month}/${year}`;
   }
 }
