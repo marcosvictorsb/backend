@@ -8,6 +8,7 @@
     "skipLibCheck": true,
     "outDir": "./dist",
     "baseUrl": "./src",
+    "rootDir": "./",
     "typeRoots": ["./node_modules/@types", "./src/@types"],
     "paths": {
       "*": ["node_modules/*", "src/@types/*"],
@@ -20,6 +21,6 @@
       "@protocols": ["src/protocols/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/@types/**/*", "*.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*.ts", "src/@types/**/*", "server.ts", "app.ts"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
 }

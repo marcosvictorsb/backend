@@ -33,16 +33,8 @@ const corsMiddleware = (
   const origin = request.get('Origin');
   const isDevelopment = process.env.NODE_ENV !== 'production';
 
-  // Log apenas em desenvolvimento
-  if (isDevelopment) {
-    console.log('CORS: Origin =', origin || 'none');
-  }
-
   // Verifica se a origem é permitida
   if (!isOriginAllowed(origin)) {
-    if (isDevelopment) {
-      console.log('CORS: Origin blocked -', origin);
-    }
     response.status(403).json({
       error: 'CORS: Origin not allowed',
       origin: origin || 'none'
@@ -66,10 +58,6 @@ const corsMiddleware = (
   if (request.method === 'OPTIONS') {
     response.status(204).end();
     return;
-  }
-
-  if (isDevelopment) {
-    console.log('CORS: Request allowed');
   }
 
   next();
