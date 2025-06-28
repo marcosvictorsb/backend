@@ -8,6 +8,7 @@ import { Presenter } from '../../../protocols/presenter';
 import { CreateExpensesGateway } from '../gateways/create.expenses.gateway';
 import { BankRepository } from '../../../domains/bank/repositories/bank.repository';
 import BankModel from '../../../domains/bank/model/bank.model';
+import { manipulateMonthlySummaryInteractor } from '../../../domains/monthly-summary/factories/';
 
 const expenseRepository = new ExpenseRepository({ model: ExpenseModel });
 const bankRepository = new BankRepository({ model: BankModel });
@@ -20,7 +21,11 @@ const gateway: CreateExpensesGatewayParams = {
 
 const ExpenseGateway = new CreateExpensesGateway(gateway);
 const presenter = new Presenter();
-const interactor = new CreateExpensesInteractor(ExpenseGateway, presenter);
+const interactor = new CreateExpensesInteractor(
+  ExpenseGateway,
+  presenter,
+  manipulateMonthlySummaryInteractor
+);
 export const createExpensesController = new CreateExpensesController({
   interactor
 });

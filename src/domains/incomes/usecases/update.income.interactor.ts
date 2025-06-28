@@ -6,11 +6,17 @@ import {
 import { IPresenter } from '../../../protocols/presenter';
 import { HttpResponse } from '../../../protocols/http';
 import { InputUpdateIncome } from '../interfaces';
+import { ManipulateMonthlySummaryInteractor } from '../../../domains/monthly-summary/usecases';
+import {
+  ManipulateMonthlySummaryType,
+  OperationType
+} from '../../../domains/monthly-summary/interfaces';
 
 export class UpdateIncomeInteractor {
   constructor(
     private readonly gateway: IUpdateIncomeGateway,
-    private presenter: IPresenter
+    private presenter: IPresenter,
+    private manipulateMonthlySummaryInteractor: ManipulateMonthlySummaryInteractor
   ) {}
 
   async execute(input: InputUpdateIncome): Promise<HttpResponse> {
@@ -69,6 +75,33 @@ export class UpdateIncomeInteractor {
             amount: newBankAmount
           });
         }
+
+        // Manipular monthly summary para income RECEIVED
+        if (currentIncome.status !== IncomeStatus.RECEIVED) {
+          // Se estava em outro status e agora está RECEIVED, adicionar o valor
+          await this.manipulateMonthlySummaryInteractor.execute({
+            referenceMonth: currentIncome.reference_month,
+            userId: currentIncome.id_user,
+            amount: amount,
+            type: ManipulateMonthlySummaryType.Income,
+            operation: OperationType.Add
+          });
+        } else {
+          // Se já estava RECEIVED, ajustar pela diferença
+          const amountDifference = amount - currentIncome.amount;
+          if (amountDifference !== 0) {
+            await this.manipulateMonthlySummaryInteractor.execute({
+              referenceMonth: currentIncome.reference_month,
+              userId: currentIncome.id_user,
+              amount: Math.abs(amountDifference),
+              type: ManipulateMonthlySummaryType.Income,
+              operation:
+                amountDifference > 0
+                  ? OperationType.Add
+                  : OperationType.Subtract
+            });
+          }
+        }
       } else if (
         currentIncome.status === IncomeStatus.RECEIVED &&
         status !== IncomeStatus.RECEIVED
@@ -78,6 +111,15 @@ export class UpdateIncomeInteractor {
           const newBankAmount = bank.amount - currentIncome.amount;
           await this.gateway.updateBank({ id: bank.id, amount: newBankAmount });
         }
+
+        // Remover do monthly summary quando deixa de ser RECEIVED
+        await this.manipulateMonthlySummaryInteractor.execute({
+          referenceMonth: currentIncome.reference_month,
+          userId: currentIncome.id_user,
+          amount: currentIncome.amount,
+          type: ManipulateMonthlySummaryType.Income,
+          operation: OperationType.Subtract
+        });
       }
 
       const updateCriteria: UpdateIncomeData = {

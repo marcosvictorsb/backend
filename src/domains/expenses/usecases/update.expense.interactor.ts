@@ -6,11 +6,17 @@ import {
 import { IPresenter } from '../../../protocols/presenter';
 import { HttpResponse } from '../../../protocols/http';
 import { InputUpdateExpense } from '../interfaces/';
+import { ManipulateMonthlySummaryInteractor } from '../../../domains/monthly-summary/usecases';
+import {
+  ManipulateMonthlySummaryType,
+  OperationType
+} from '../../../domains/monthly-summary/interfaces';
 
 export class UpdateExpenseInteractor {
   constructor(
     private readonly gateway: IUpdateExpenseGateway,
-    private presenter: IPresenter
+    private presenter: IPresenter,
+    private manipulateMonthlySummaryInteractor: ManipulateMonthlySummaryInteractor
   ) {}
 
   async execute(input: InputUpdateExpense): Promise<HttpResponse> {
@@ -59,6 +65,15 @@ export class UpdateExpenseInteractor {
           const newAmount = oldBank.amount + currentExpense.amount;
           await this.gateway.updateBank({ id: oldBank.id, amount: newAmount });
         }
+
+        // Remover do monthly summary quando deixa de ser PAID
+        await this.manipulateMonthlySummaryInteractor.execute({
+          referenceMonth: currentExpense.reference_month,
+          userId: currentExpense.id_user,
+          amount: currentExpense.amount,
+          type: ManipulateMonthlySummaryType.Expense,
+          operation: OperationType.Subtract
+        });
       } else if (!wasPaid && willBePaid) {
         // Caso 2: Estava pendente e será marcado como pago
         // Retira o valor do banco (novo ou atual)
@@ -74,6 +89,15 @@ export class UpdateExpenseInteractor {
             amount: newAmount
           });
         }
+
+        // Adicionar ao monthly summary quando passa a ser PAID
+        await this.manipulateMonthlySummaryInteractor.execute({
+          referenceMonth: currentExpense.reference_month,
+          userId: currentExpense.id_user,
+          amount: amount,
+          type: ManipulateMonthlySummaryType.Expense,
+          operation: OperationType.Add
+        });
       } else if (wasPaid && willBePaid && isChangingBank) {
         // Caso 3: Continua pago, mas mudou de banco
         // Devolve ao banco antigo e retira do novo
@@ -95,6 +119,42 @@ export class UpdateExpenseInteractor {
           id: newBank.id,
           amount: newBankNewAmount
         });
+
+        // Ajustar monthly summary pela diferença de valor quando continua PAID
+        const amountDifference = amount - currentExpense.amount;
+        if (amountDifference !== 0) {
+          await this.manipulateMonthlySummaryInteractor.execute({
+            referenceMonth: currentExpense.reference_month,
+            userId: currentExpense.id_user,
+            amount: Math.abs(amountDifference),
+            type: ManipulateMonthlySummaryType.Expense,
+            operation:
+              amountDifference > 0 ? OperationType.Add : OperationType.Subtract
+          });
+        }
+      } else if (wasPaid && willBePaid && !isChangingBank) {
+        // Caso 4: Continua pago, mesmo banco, mas pode ter mudado o valor
+        const amountDifference = amount - currentExpense.amount;
+        if (amountDifference !== 0) {
+          // Atualizar o banco pela diferença
+          if (oldBank) {
+            const newBankAmount = oldBank.amount - amountDifference;
+            await this.gateway.updateBank({
+              id: oldBank.id,
+              amount: newBankAmount
+            });
+          }
+
+          // Ajustar monthly summary pela diferença
+          await this.manipulateMonthlySummaryInteractor.execute({
+            referenceMonth: currentExpense.reference_month,
+            userId: currentExpense.id_user,
+            amount: Math.abs(amountDifference),
+            type: ManipulateMonthlySummaryType.Expense,
+            operation:
+              amountDifference > 0 ? OperationType.Add : OperationType.Subtract
+          });
+        }
       }
 
       // 5. Atualiza a despesa

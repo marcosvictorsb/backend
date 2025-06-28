@@ -6,11 +6,17 @@ import {
   InputCreateExpenses
 } from '../interfaces';
 import { IPresenter, HttpResponse } from '../../../protocols';
+import { ManipulateMonthlySummaryInteractor } from '../../../domains/monthly-summary/usecases';
+import {
+  ManipulateMonthlySummaryType,
+  OperationType
+} from '../../../domains/monthly-summary/interfaces';
 
 export class CreateExpensesInteractor {
   constructor(
     private readonly gateway: ICreateExpensesGateway,
-    private presenter: IPresenter
+    private presenter: IPresenter,
+    private manipulateMonthlySummaryInteractor: ManipulateMonthlySummaryInteractor
   ) {}
 
   async execute(inputs: InputCreateExpenses[]): Promise<HttpResponse> {
@@ -162,6 +168,17 @@ export class CreateExpensesInteractor {
         expense: JSON.stringify(expense)
       });
 
+      // Manipular monthly summary para expense PAID
+      if (expense.status.toLowerCase() === ExpenseStatus.PAID.toLowerCase()) {
+        await this.manipulateMonthlySummaryInteractor.execute({
+          referenceMonth: expense.reference_month,
+          userId: expense.id_user,
+          amount: expense.amount,
+          type: ManipulateMonthlySummaryType.Expense,
+          operation: OperationType.Add
+        });
+      }
+
       expenses.push(this.mapExpenseOutput(expense));
     }
 
@@ -190,6 +207,17 @@ export class CreateExpensesInteractor {
     this.gateway.loggerInfo('Despesa criada: ', {
       expense: JSON.stringify(expense)
     });
+
+    // Manipular monthly summary para expense PAID
+    if (expense.status.toLowerCase() === ExpenseStatus.PAID.toLowerCase()) {
+      await this.manipulateMonthlySummaryInteractor.execute({
+        referenceMonth: expense.reference_month,
+        userId: expense.id_user,
+        amount: expense.amount,
+        type: ManipulateMonthlySummaryType.Expense,
+        operation: OperationType.Add
+      });
+    }
 
     return [this.mapExpenseOutput(expense)];
   }

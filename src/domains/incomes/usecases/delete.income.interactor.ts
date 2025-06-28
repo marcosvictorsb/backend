@@ -3,11 +3,17 @@ import { IPresenter } from '../../../protocols/presenter';
 import { HttpResponse } from '../../../protocols/http';
 import { InputDeleteIncome } from '../interfaces';
 import { UpdateBankData } from '../../../domains/bank/interfaces';
+import { ManipulateMonthlySummaryInteractor } from '../../../domains/monthly-summary/usecases';
+import {
+  ManipulateMonthlySummaryType,
+  OperationType
+} from '../../../domains/monthly-summary/interfaces';
 
 export class DeleteIncomeInteractor {
   constructor(
     private readonly gateway: IDeleteIncomeGateway,
-    private presenter: IPresenter
+    private presenter: IPresenter,
+    private manipulateMonthlySummaryInteractor: ManipulateMonthlySummaryInteractor
   ) {}
 
   async execute(input: InputDeleteIncome): Promise<HttpResponse> {
@@ -36,6 +42,14 @@ export class DeleteIncomeInteractor {
           id: bank.id
         };
         await this.gateway.updateBank(criteriaUpdate);
+
+        await this.manipulateMonthlySummaryInteractor.execute({
+          referenceMonth: income.reference_month,
+          userId: income.id_user,
+          amount: income.amount,
+          type: ManipulateMonthlySummaryType.Income,
+          operation: OperationType.Subtract
+        });
       }
 
       this.gateway.loggerInfo('Despesa deletada');

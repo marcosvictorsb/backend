@@ -5,7 +5,7 @@ import { DataLogOutput } from '../../../adapters/services';
 
 export enum OperationType {
   Add = 'add',
-  Dubtract = 'subtract'
+  Subtract = 'subtract'
 }
 
 export enum ManipulateMonthlySummaryType {

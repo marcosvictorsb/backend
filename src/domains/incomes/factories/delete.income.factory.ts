@@ -8,7 +8,7 @@ import { Presenter } from '../../../protocols/presenter';
 import { DeleteIncomeGateway } from '../gateways';
 import BankModel from '../../../domains/bank/model/bank.model';
 import { BankRepository } from '../../../domains/bank/repositories/bank.repository';
-
+import { manipulateMonthlySummaryInteractor } from '../../../domains/monthly-summary/factories/';
 const incomeRepository = new IncomeRepository({ model: IncomeModel });
 const bankRepository = new BankRepository({ model: BankModel });
 
@@ -20,7 +20,11 @@ const gateway: DeleteIncomeGatewayParams = {
 
 const incomeGateway = new DeleteIncomeGateway(gateway);
 const presenter = new Presenter();
-const interactor = new DeleteIncomeInteractor(incomeGateway, presenter);
+const interactor = new DeleteIncomeInteractor(
+  incomeGateway,
+  presenter,
+  manipulateMonthlySummaryInteractor
+);
 export const deleteIncomeController = new DeleteIncomeController({
   interactor
 });

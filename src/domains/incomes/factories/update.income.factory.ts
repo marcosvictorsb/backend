@@ -8,6 +8,7 @@ import { Presenter } from '../../../protocols/presenter';
 import { UpdateIncomeGateway } from '../gateways';
 import { BankRepository } from '../../../domains/bank/repositories/bank.repository';
 import BankModel from '../../../domains/bank/model/bank.model';
+import { manipulateMonthlySummaryInteractor } from '../../../domains/monthly-summary/factories/';
 
 const incomeRepository = new IncomeRepository({ model: IncomeModel });
 const bankRepository = new BankRepository({ model: BankModel });
@@ -20,7 +21,11 @@ const gateway: UpdateIncomeGatewayParams = {
 
 const IncomeGateway = new UpdateIncomeGateway(gateway);
 const presenter = new Presenter();
-const interactor = new UpdateIncomeInteractor(IncomeGateway, presenter);
+const interactor = new UpdateIncomeInteractor(
+  IncomeGateway,
+  presenter,
+  manipulateMonthlySummaryInteractor
+);
 export const updateIncomesController = new UpdateIncomeController({
   interactor
 });

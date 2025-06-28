@@ -113,6 +113,17 @@ export class CreateIncomesInteractor {
       };
 
       const Income = await this.gateway.createIncomes(data);
+
+      if (Income.status === IncomeStatus.RECEIVED) {
+        await this.manipulateMonthlySummaryInteractor.execute({
+          referenceMonth: Income.reference_month,
+          userId: Income.id_user,
+          amount: Income.amount,
+          type: ManipulateMonthlySummaryType.Income,
+          operation: OperationType.Add
+        });
+      }
+         
       Incomes.push({
         amount: Income.amount,
         description: Income.description,
@@ -164,13 +175,15 @@ export class CreateIncomesInteractor {
       })
     });
 
-    await this.manipulateMonthlySummaryInteractor.execute({
-      referenceMonth: income.reference_month,
-      userId: income.id_user,
-      amount: income.amount,
-      type: ManipulateMonthlySummaryType.Income,
-      operation: OperationType.Add
-    });
+    if (income.status === IncomeStatus.RECEIVED) {
+      await this.manipulateMonthlySummaryInteractor.execute({
+        referenceMonth: income.reference_month,
+        userId: income.id_user,
+        amount: income.amount,
+        type: ManipulateMonthlySummaryType.Income,
+        operation: OperationType.Add
+      });
+    }    
 
     return [
       {
