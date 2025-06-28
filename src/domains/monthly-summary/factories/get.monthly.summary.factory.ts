@@ -16,6 +16,9 @@ const gateway: GetMonthlySummaryGatewayParams = {
 
 const getMonthlySummaryGateway = new GetMonthlySummaryGateway(gateway);
 const presenter = new Presenter();
-const interactor = new GetMonthlySummaryInteractor(getMonthlySummaryGateway, presenter);
+const interactor = new GetMonthlySummaryInteractor(getMonthlySummaryGateway);
 
-export const getMonthlySummaryController = new GetMonthlySummaryController({ interactor });
+export const getMonthlySummaryController = new GetMonthlySummaryController({
+  interactor,
+  presenter
+});

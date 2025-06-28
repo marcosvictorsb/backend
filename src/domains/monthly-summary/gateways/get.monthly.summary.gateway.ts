@@ -24,11 +24,38 @@ export class GetMonthlySummaryGateway implements IGetMonthlySummaryGateway {
     this.logger.error(message, data);
   }
 
-  async findAll(criteria: FindMonthlySummaryCriteria): Promise<MonthlySummaryEntity[]> {
+  async findAll(
+    criteria: FindMonthlySummaryCriteria
+  ): Promise<MonthlySummaryEntity[]> {
     return await this.monthlySummaryRepository.findAll(criteria);
   }
 
-  async findByUserAndMonth(userId: number, referenceMonth: string): Promise<MonthlySummaryEntity | null> {
-    return await this.monthlySummaryRepository.findByUserAndMonth(userId, referenceMonth);
+  async findByUserAndMonth(
+    userId: number,
+    referenceMonth: string
+  ): Promise<MonthlySummaryEntity | null> {
+    return await this.monthlySummaryRepository.findByUserAndMonth(
+      userId,
+      referenceMonth
+    );
+  }
+
+  async findPreviousMonthBalance(
+    userId: number,
+    referenceMonth: string
+  ): Promise<number> {
+    // Usar o método estático da entidade para calcular o mês anterior
+    const previousReferenceMonth =
+      MonthlySummaryEntity.getPreviousReferenceMonth(referenceMonth);
+
+    // Buscar o resumo do mês anterior
+    const previousSummary =
+      await this.monthlySummaryRepository.findByUserAndMonth(
+        userId,
+        previousReferenceMonth
+      );
+
+    // Se não existe resumo do mês anterior, retorna 0
+    return previousSummary ? previousSummary.balance : 0;
   }
 }

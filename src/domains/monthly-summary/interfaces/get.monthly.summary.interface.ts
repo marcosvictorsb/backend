@@ -20,6 +20,18 @@ export type GetMonthlySummaryData = {
   deleted_at?: Date;
 };
 
+export type MonthlySummaryResult = {
+  reference_month: string;
+  total_incomes: number;
+  total_expenses: number;
+  balance: number;
+  initial_balance?: number;
+};
+
+export type MonthlySummaryListResult = {
+  summaries: MonthlySummaryResult[];
+};
+
 export type GetMonthlySummaryGatewayParams = {
   repository: IMonthlySummaryRepository;
   logger: typeof logger;
@@ -30,8 +42,17 @@ export type GetMonthlySummaryControllerParams = {
 };
 
 export interface IGetMonthlySummaryGateway {
-  findAll(criteria: FindMonthlySummaryCriteria): Promise<MonthlySummaryEntity[]>;
-  findByUserAndMonth(userId: number, referenceMonth: string): Promise<MonthlySummaryEntity | null>;
+  findAll(
+    criteria: FindMonthlySummaryCriteria
+  ): Promise<MonthlySummaryEntity[]>;
+  findByUserAndMonth(
+    userId: number,
+    referenceMonth: string
+  ): Promise<MonthlySummaryEntity | null>;
+  findPreviousMonthBalance(
+    userId: number,
+    referenceMonth: string
+  ): Promise<number>;
   loggerInfo(message: string, data?: DataLogOutput): void;
   loggerError(message: string, data?: DataLogOutput): void;
 }

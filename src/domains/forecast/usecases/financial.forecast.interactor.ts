@@ -10,11 +10,13 @@ import { IPresenter } from '../../../protocols/presenter';
 import { HttpResponse } from '../../../protocols/http';
 import { ExpenseStatus } from '../../expenses/interfaces/expenses';
 import { IncomeStatus } from '../../incomes/interfaces/incomes';
+import { GetMonthlySummaryInteractor } from '../../monthly-summary/usecases/get.monthly.summary.interactor';
 
 export class FinancialForecastInteractor {
   constructor(
     private readonly gateway: IForecastGateway,
-    private presenter: IPresenter
+    private presenter: IPresenter,
+    private getMonthlySummaryInteractor: GetMonthlySummaryInteractor
   ) {}
 
   async execute(input: InputForecast): Promise<HttpResponse> {
@@ -30,22 +32,39 @@ export class FinancialForecastInteractor {
       const { year, month } = this.parseReferenceMonth(referenceMonth);
       const daysInMonth = new Date(year, month, 0).getDate();
 
-      // 1. Buscar saldo inicial dos bancos
-      const banks = await this.gateway.findBanksByUser(userIdNumber);
-      let initialBalance = banks.reduce((sum, bank) => sum + bank.amount, 0);
+      // 1. Buscar saldo inicial do mês anterior através do monthly summary
+      let initialBalance = 0;
+      try {
+        const previousMonthSummary =
+          await this.getMonthlySummaryInteractor.execute({
+            id_user: userIdNumber,
+            reference_month: referenceMonth
+          });
+
+        if (
+          'initial_balance' in previousMonthSummary &&
+          previousMonthSummary.initial_balance !== undefined
+        ) {
+          initialBalance = previousMonthSummary.initial_balance;
+        } else {
+          // Fallback: buscar saldo atual dos bancos se não houver resumo do mês anterior
+          const banks = await this.gateway.findBanksByUser(userIdNumber);
+          initialBalance = banks.reduce((sum, bank) => sum + bank.amount, 0);
+        }
+      } catch (error) {
+        this.gateway.loggerInfo(
+          'Resumo do mês anterior não encontrado, usando saldo atual dos bancos'
+        );
+        // Fallback: buscar saldo atual dos bancos
+        const banks = await this.gateway.findBanksByUser(userIdNumber);
+        initialBalance = banks.reduce((sum, bank) => sum + bank.amount, 0);
+      }
 
       // 2. Buscar receitas do mês
       const incomes = await this.gateway.findIncomesByUserAndMonth(
         userIdNumber,
         referenceMonth
       );
-
-      // buscar o valor total de receitas
-      const totalIncomes = incomes.reduce((sum, income) => {
-        return sum + income.amount;
-      }, 0);
-
-      initialBalance -= totalIncomes;
 
       // 3. Buscar despesas do mês
       const expenses = await this.gateway.findExpensesByUserAndMonth(

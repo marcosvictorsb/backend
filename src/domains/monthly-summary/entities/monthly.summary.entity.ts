@@ -67,6 +67,19 @@ export class MonthlySummaryEntity {
     return regex.test(referenceMonth);
   }
 
+  static getPreviousReferenceMonth(referenceMonth: string): string {
+    const [month, year] = referenceMonth.split('/').map(Number);
+    let previousMonth = month - 1;
+    let previousYear = year;
+
+    if (previousMonth === 0) {
+      previousMonth = 12;
+      previousYear = year - 1;
+    }
+
+    return `${String(previousMonth).padStart(2, '0')}/${previousYear}`;
+  }
+
   toJSON() {
     return {
       id: this.id,
