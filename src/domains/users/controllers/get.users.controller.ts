@@ -24,7 +24,6 @@ export class GetUsersController implements IGetUsersController {
       limit: limit ? Number(limit) : 25
     };
     const { status, body } = await this.interactor.execute(input);
-    console.log(body);
     return response.status(status).json(body);
   }
 }

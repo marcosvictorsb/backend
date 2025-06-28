@@ -21,7 +21,6 @@ async function createDatabase(): Promise<void> {
     await connection.query(
       `CREATE DATABASE IF NOT EXISTS ${process.env.DB_NAME}`
     );
-    console.log('Banco de dados criado ou já existente');
   } catch (error) {
     console.error('Erro ao criar o banco de dados:', error);
   } finally {

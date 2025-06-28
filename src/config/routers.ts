@@ -7,6 +7,7 @@ import banksRoutes from '../domains/bank/routes';
 import categoriesRoutes from '../domains/category/routes';
 import graphicRoutes from '../domains/graphic/routes';
 import forecastRoutes from '../domains/forecast/routes';
+import monthlySummaryRoutes from '../domains/monthly-summary/routes';
 import deploy from '../infra/deploy/deploy';
 
 const routers = Router();
@@ -19,6 +20,7 @@ routers.use('/api/banks', banksRoutes);
 routers.use('/api/categories', categoriesRoutes);
 routers.use('/api/graphic', graphicRoutes);
 routers.use('/api/forecast', forecastRoutes);
+routers.use('/api/monthly-summary', monthlySummaryRoutes);
 
 // Webhook para deploy
 routers.post('/api/webhook/deploy', (request: Request, response: Response) =>

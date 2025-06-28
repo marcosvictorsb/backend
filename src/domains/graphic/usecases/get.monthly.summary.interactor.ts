@@ -32,7 +32,6 @@ export class GetMonthlySummaryInteractor {
         dateCreateStart: Utils.getFirstDayOfYear(),
         dateCreateEnd: Utils.getLastDayOfYear()
       });
-      console.log(incomes);
       this.gateway.loggerInfo('Foi realizad a busca das incomes');
 
       const hasNoExpenses = expenses && !expenses.length;

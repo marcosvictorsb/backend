@@ -10,11 +10,15 @@ import {
   FindBankCriteria,
   UpdateBankData
 } from '../../../domains/bank/interfaces';
+import { ManipulateMonthlySummaryInteractor } from '../../../domains/monthly-summary/usecases/';
+import { ManipulateMonthlySummaryType } from '../../../domains/monthly-summary/interfaces';
+import { OperationType } from '../../../domains/monthly-summary/interfaces';
 
 export class CreateIncomesInteractor {
   constructor(
     private readonly gateway: ICreateIncomesGateway,
-    private presenter: IPresenter
+    private presenter: IPresenter,
+    private manipulateMonthlySummaryInteractor: ManipulateMonthlySummaryInteractor
   ) {}
 
   async execute(input: InputCreateIncomes): Promise<HttpResponse> {
@@ -65,7 +69,6 @@ export class CreateIncomesInteractor {
         ...incomes[0]
       });
     } catch (error) {
-      console.log(error);
       this.gateway.loggerError('Erro ao criar receitas', { error });
       return this.presenter.serverError('Erro ao criar receitas');
     }
@@ -151,6 +154,24 @@ export class CreateIncomesInteractor {
     };
 
     const income = await this.gateway.createIncomes(data);
+    this.gateway.loggerInfo('Registro de receita criado com sucesso', {
+      requestTxt: JSON.stringify(income)
+    });
+    this.gateway.loggerInfo('Criando resumo mensal', {
+      requestTxt: JSON.stringify({
+        reference_month: income.reference_month,
+        id_user: income.id_user
+      })
+    });
+
+    await this.manipulateMonthlySummaryInteractor.execute({
+      referenceMonth: income.reference_month,
+      userId: income.id_user,
+      amount: income.amount,
+      type: ManipulateMonthlySummaryType.Income,
+      operation: OperationType.Add
+    });
+
     return [
       {
         amount: income.amount,

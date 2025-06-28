@@ -32,13 +32,20 @@ export class FinancialForecastInteractor {
 
       // 1. Buscar saldo inicial dos bancos
       const banks = await this.gateway.findBanksByUser(userIdNumber);
-      const initialBalance = banks.reduce((sum, bank) => sum + bank.amount, 0);
+      let initialBalance = banks.reduce((sum, bank) => sum + bank.amount, 0);
 
       // 2. Buscar receitas do mês
       const incomes = await this.gateway.findIncomesByUserAndMonth(
         userIdNumber,
         referenceMonth
       );
+
+      // buscar o valor total de receitas
+      const totalIncomes = incomes.reduce((sum, income) => {
+        return sum + income.amount;
+      }, 0);
+
+      initialBalance -= totalIncomes;
 
       // 3. Buscar despesas do mês
       const expenses = await this.gateway.findExpensesByUserAndMonth(
@@ -172,6 +179,7 @@ export class FinancialForecastInteractor {
     initialBalance: number
   ): DayForecastDTO[] {
     const days: DayForecastDTO[] = [];
+    // Inicializar com o saldo inicial (saldo dos bancos menos receitas já recebidas)
     let runningBalance = initialBalance;
 
     for (let day = 1; day <= daysInMonth; day++) {
@@ -187,8 +195,8 @@ export class FinancialForecastInteractor {
       const dayExpenses = expensesByDay.get(dateStr) || [];
       const expense = dayExpenses.reduce((sum, exp) => sum + exp.amount, 0);
 
-      // Calcular saldo acumulado (igual à planilha)
-      runningBalance += income - expense;
+      // Calcular saldo acumulado: saldo anterior + receitas - despesas
+      runningBalance = runningBalance + income - expense;
 
       // Listar descrições dos gastos (como na coluna "Gastos" da planilha)
       const expensesDescription = dayExpenses
